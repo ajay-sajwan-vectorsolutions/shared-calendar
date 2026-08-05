@@ -1,0 +1,12 @@
+{
+  "name": "release-calendar-sync",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Pulls the published Outlook ICS feed into events.json for the static release calendar.",
+  "scripts": {
+    "sync": "node scripts/sync-ics.js"
+  },
+  "dependencies": {
+    "node-ical": "^0.20.1"
+  }
+}

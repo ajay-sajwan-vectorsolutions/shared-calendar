@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Release Calendar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14181e;
+  --ink-2:#4b5563;
+  --ink-3:#8b959f;
+  --rule:#e0e5e9;
+  --rule-2:#eef1f3;
+  --paper:#fcfdfd;
+  --panel:#ffffff;
+  --shade:#f5f7f8;
+  --accent:#1f6f5c;
+
+  --c-release:#1f6f5c;
+  --c-patch:#8a5a00;
+  --c-mobile:#54479c;
+  --c-freeze:#a33a3a;
+  --c-note:#4a5560;
+
+  --bar-h:26px;
+  --bar-gap:3px;
+  --sans:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:14px;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1400px;margin:0 auto;padding:22px 20px 64px}
+
+/* ---------- masthead ---------- */
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.brand{display:flex;flex-direction:column;gap:2px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+h1{margin:0;font-size:25px;font-weight:700;letter-spacing:-.02em}
+.period{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:2px}
+
+.controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button,.btn{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:7px;padding:7px 12px;cursor:pointer;transition:border-color .12s,background .12s}
+button:hover{border-color:var(--ink-3);background:var(--shade)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+button.primary:hover{background:#000}
+button.icon{padding:7px 10px;font-family:var(--mono);line-height:1}
+button.danger{color:var(--c-freeze);border-color:#e8cfcf}
+button.danger:hover{background:#fdf5f5;border-color:var(--c-freeze)}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:7px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;border-radius:0;padding:7px 13px}
+.seg button+button{border-left:1px solid var(--rule)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+
+/* ---------- legend ---------- */
+.legend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--rule)}
+.key{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2)}
+.swatch{width:22px;height:11px;border-radius:3px;flex:none}
+.key.hatch .swatch{border:1px dashed var(--ink-3)}
+
+/* ---------- calendar ---------- */
+.dow{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--rule)}
+.dow span{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);padding:9px 8px;text-align:left}
+.dow span+span{border-left:1px solid var(--rule-2)}
+
+.week{border-bottom:1px solid var(--rule)}
+.week:last-child{border-bottom:2px solid var(--ink)}
+.datesrow{display:grid;grid-template-columns:repeat(7,1fr)}
+.daycell{position:relative;padding:7px 8px 3px;min-height:34px;cursor:pointer;transition:background .1s}
+.daycell+.daycell{border-left:1px solid var(--rule-2)}
+.daycell:hover{background:var(--shade)}
+.daycell.dim .num{color:#c3cad0}
+.daycell.weekend{background:#fafbfb}
+.daycell.weekend:hover{background:var(--shade)}
+.num{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--ink-2)}
+.daycell.today .num{background:var(--ink);color:#fff;border-radius:5px;padding:1px 6px;margin-left:-4px}
+.daycell .plus{position:absolute;top:6px;right:7px;font-family:var(--mono);font-size:14px;color:var(--ink-3);opacity:0;line-height:1}
+.daycell:hover .plus{opacity:1}
+
+.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--bar-gap) 0;padding:1px 0 8px}
+.laneline{position:absolute;inset:0;pointer-events:none}
+.bar{
+  grid-row:var(--lane);
+  grid-column:var(--col) / span var(--span);
+  height:var(--bar-h);
+  display:flex;align-items:center;gap:6px;
+  margin:0 3px;padding:0 9px;
+  border-radius:5px;
+  font-size:12.5px;font-weight:500;
+  color:#fff;background:var(--tone);
+  border:1px solid transparent;
+  cursor:pointer;text-align:left;
+  overflow:hidden;white-space:nowrap;
+  transition:transform .1s,filter .12s;
+}
+.bar:hover{filter:brightness(1.12);border-color:transparent}
+.bar:active{transform:translateY(1px)}
+.bar .label{overflow:hidden;text-overflow:ellipsis}
+.bar.tentative{
+  color:var(--tone);
+  background:
+    repeating-linear-gradient(-45deg,
+      color-mix(in srgb,var(--tone) 13%,#fff) 0 5px,
+      color-mix(in srgb,var(--tone) 5%,#fff) 5px 10px);
+  border:1px dashed color-mix(in srgb,var(--tone) 45%,#fff);
+}
+.bar.contPrev{border-top-left-radius:0;border-bottom-left-radius:0;margin-left:0}
+.bar.contNext{border-top-right-radius:0;border-bottom-right-radius:0;margin-right:0}
+.bar .tag{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.72;flex:none}
+
+/* ---------- log view ---------- */
+.log{display:none;padding-top:6px}
+.log.on{display:block}
+.cal.off{display:none}
+.logmonth{margin-top:22px}
+.logmonth h2{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 0 8px;padding-bottom:7px;border-bottom:1px solid var(--rule)}
+.logrow{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:baseline;padding:9px 2px;border-bottom:1px solid var(--rule-2);cursor:pointer}
+.logrow:hover{background:var(--shade)}
+.logrow .when{font-family:var(--mono);font-size:11.5px;color:var(--ink-2)}
+.logrow .what{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.dot{width:8px;height:8px;border-radius:2px;flex:none;transform:translateY(-1px)}
+.logrow .note{color:var(--ink-3);font-size:12.5px}
+.pill{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule);border-radius:4px;padding:1px 5px;color:var(--ink-3)}
+
+/* ---------- drawer ---------- */
+.scrim{position:fixed;inset:0;background:rgba(20,24,30,.34);opacity:0;pointer-events:none;transition:opacity .16s;z-index:40}
+.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--panel);border-left:1px solid var(--rule);z-index:50;transform:translateX(100%);transition:transform .2s ease;display:flex;flex-direction:column}
+.drawer.on{transform:none}
+.drawer header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 14px;border-bottom:1px solid var(--rule)}
+.drawer header h2{margin:0;font-size:16px;font-weight:600}
+.drawer .body{padding:18px 22px;overflow:auto;flex:1}
+.drawer footer{padding:14px 22px;border-top:1px solid var(--rule);display:flex;gap:8px;align-items:center}
+.field{margin-bottom:15px}
+label{display:block;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+input[type=text],input[type=date],select,textarea{width:100%;font-family:var(--sans);font-size:13.5px;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:7px;padding:9px 11px}
+textarea{resize:vertical;min-height:70px;font-family:var(--mono);font-size:12px;line-height:1.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.check{display:flex;align-items:flex-start;gap:9px;padding:11px;border:1px solid var(--rule);border-radius:7px;background:var(--paper);cursor:pointer}
+.check input{margin:2px 0 0}
+.check .txt strong{display:block;font-size:13px;font-weight:600}
+.check .txt span{font-size:12px;color:var(--ink-3)}
+.hint{font-size:12px;color:var(--ink-3);margin:0 0 14px}
+.hint code{font-family:var(--mono);font-size:11.5px;background:var(--shade);border:1px solid var(--rule);border-radius:4px;padding:1px 4px}
+.spacer{flex:1}
+.toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--ink);color:#fff;font-size:13px;padding:10px 18px;border-radius:8px;opacity:0;pointer-events:none;transition:.18s;z-index:60}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:820px){
+  .wrap{padding:16px 12px 56px}
+  .bar{font-size:11px;padding:0 6px}
+  .bar .tag{display:none}
+  .dow span{font-size:9px;padding:7px 5px}
+  .logrow{grid-template-columns:1fr;gap:3px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="masthead">
+    <div class="brand">
+      <span class="eyebrow">TeachPoint · Engineering</span>
+      <h1>Release Calendar</h1>
+      <span class="period" id="period"></span>
+      <span class="period" id="syncedAt" style="color:var(--ink-3)"></span>
+    </div>
+    <div class="controls">
+      <div class="seg">
+        <button id="prev" class="icon" aria-label="Previous month">&larr;</button>
+        <button id="today">Today</button>
+        <button id="next" class="icon" aria-label="Next month">&rarr;</button>
+      </div>
+      <div class="seg" role="group" aria-label="View">
+        <button id="vCal" aria-pressed="true">Calendar</button>
+        <button id="vLog" aria-pressed="false">Log</button>
+      </div>
+      <button id="add" class="primary">Add event</button>
+      <button id="data">Data</button>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="cal" id="cal">
+    <div class="dow">
+      <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+    </div>
+    <div id="weeks"></div>
+  </div>
+
+  <div class="log" id="log"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- event editor -->
+<aside class="drawer" id="editor" aria-hidden="true" role="dialog" aria-label="Event details">
+  <header>
+    <h2 id="edTitle">Add event</h2>
+    <button class="icon" id="edClose" aria-label="Close">&times;</button>
+  </header>
+  <div class="body">
+    <div class="field">
+      <label for="fTitle">Label</label>
+      <input type="text" id="fTitle" placeholder="Web Release (PD Tracking)">
+    </div>
+    <div class="field row2">
+      <div>
+        <label for="fStart">Starts</label>
+        <input type="date" id="fStart">
+      </div>
+      <div>
+        <label for="fEnd">Ends</label>
+        <input type="date" id="fEnd">
+      </div>
+    </div>
+    <div class="field">
+      <label for="fCat">Channel</label>
+      <select id="fCat"></select>
+    </div>
+    <div class="field">
+      <label class="check" for="fTent">
+        <input type="checkbox" id="fTent">
+        <span class="txt">
+          <strong>Tentative</strong>
+          <span>Draws the bar hatched instead of solid.</span>
+        </span>
+      </label>
+    </div>
+    <div class="field">
+      <label for="fNote">Note</label>
+      <textarea id="fNote" placeholder="Ticket link, scope, owner…"></textarea>
+    </div>
+  </div>
+  <footer>
+    <button class="primary" id="edSave">Save</button>
+    <button id="edCancel">Cancel</button>
+    <span class="spacer"></span>
+    <button class="danger" id="edDelete">Delete</button>
+  </footer>
+</aside>
+
+<!-- data panel -->
+<aside class="drawer" id="dataPanel" aria-hidden="true" role="dialog" aria-label="Event data">
+  <header>
+    <h2>Event data</h2>
+    <button class="icon" id="dClose" aria-label="Close">&times;</button>
+  </header>
+  <div class="body">
+    <p class="hint">This page has no server, so edits live in the browser until you save them back to the repo. Copy this and commit it as <code>events.json</code> — the commit history then becomes your record of what changed and when.</p>
+    <div class="field">
+      <label for="fJson">events.json</label>
+      <textarea id="fJson" spellcheck="false" style="min-height:340px"></textarea>
+    </div>
+  </div>
+  <footer>
+    <button class="primary" id="dCopy">Copy</button>
+    <button id="dDownload">Download</button>
+    <span class="spacer"></span>
+    <button id="dLoad">Load pasted</button>
+  </footer>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script type="application/json" id="seed">
+[
+  {"title":"Web Release (PD Tracking)","start":"2026-08-12","end":"2026-08-12","cat":"release","note":"Confirmed"},
+  {"title":"Keystone","start":"2026-08-17","end":"2026-08-17","cat":"note","note":"Not a release — finish the work and move to other work"},
+  {"title":"Mobile Release","start":"2026-08-19","end":"2026-08-21","cat":"mobile","tentative":true},
+  {"title":"Monthly Bug Release","start":"2026-08-24","end":"2026-08-26","cat":"release","tentative":true},
+  {"title":"Performance Release","start":"2026-08-26","end":"2026-08-28","cat":"release","tentative":true},
+  {"title":"Monthly Patching","start":"2026-08-11","end":"2026-08-11","cat":"patch","note":"Payara + OS patches, 10pm ET window"},
+  {"title":"Code Freeze","start":"2026-08-10","end":"2026-08-11","cat":"freeze"}
+]
+</script>
+
+<script>
+const CATS = {
+  release:{label:"Release", tone:"var(--c-release)"},
+  patch:  {label:"Patching",tone:"var(--c-patch)"},
+  mobile: {label:"Mobile",  tone:"var(--c-mobile)"},
+  freeze: {label:"Freeze",  tone:"var(--c-freeze)"},
+  note:   {label:"Note",    tone:"var(--c-note)"}
+};
+
+let events = [];
+let view = new Date();
+let editing = null;
+
+/* ---------- dates: strings in, strings out, no timezones ---------- */
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const key = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const days = (a,b) => Math.round((b - a) / 864e5);
+const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const pretty = s => { const d = parse(s); return `${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}`; };
+
+function normalize(list){
+  return list.filter(e => e && e.title && e.start).map(e => ({
+    title: String(e.title),
+    start: e.start,
+    end: e.end || e.start,
+    cat: CATS[e.cat] ? e.cat : "release",
+    tentative: !!e.tentative,
+    note: e.note || ""
+  })).sort((a,b) => a.start.localeCompare(b.start) || days(parse(a.start),parse(a.end)) - days(parse(b.start),parse(b.end)));
+}
+
+/* ---------- layout: clip each event to each week, pack into lanes ---------- */
+function weeksOf(year, month){
+  const first = new Date(year, month, 1);
+  const last = new Date(year, month+1, 0);
+  let cur = addDays(first, -first.getDay());
+  const out = [];
+  while(true){
+    const w = [];
+    for(let i=0;i<7;i++){ w.push(cur); cur = addDays(cur,1); }
+    out.push(w);
+    if(w[6] >= last) break;
+  }
+  return out;
+}
+
+function packWeek(week){
+  const a = week[0], b = week[6];
+  const segs = [];
+  for(const ev of events){
+    const s = parse(ev.start), e = parse(ev.end);
+    if(e < a || s > b) continue;
+    const c0 = Math.max(0, days(a,s));
+    const c1 = Math.min(6, days(a,e));
+    segs.push({ ev, col:c0, span:c1-c0+1, prev:s<a, next:e>b });
+  }
+  segs.sort((x,y) => x.col - y.col || y.span - x.span || x.ev.title.localeCompare(y.ev.title));
+  const lanes = [];
+  for(const sg of segs){
+    let i = 0;
+    for(;;){
+      lanes[i] = lanes[i] || [];
+      const free = lanes[i].every(o => sg.col > o.col+o.span-1 || sg.col+sg.span-1 < o.col);
+      if(free){ lanes[i].push(sg); sg.lane = i+1; break; }
+      i++;
+    }
+  }
+  return { segs, lanes: Math.max(lanes.length, 1) };
+}
+
+/* ---------- render ---------- */
+function renderLegend(){
+  const el = document.getElementById("legend");
+  el.innerHTML = Object.entries(CATS).map(([k,c]) =>
+    `<span class="key"><span class="swatch" style="background:${c.tone}"></span>${c.label}</span>`
+  ).join("") + `<span class="key hatch"><span class="swatch" style="background:repeating-linear-gradient(-45deg,#e9ebed 0 4px,#f7f8f9 4px 8px)"></span>Tentative</span>`;
+}
+
+function renderCalendar(){
+  const y = view.getFullYear(), m = view.getMonth();
+  document.getElementById("period").textContent = `${MONTHS[m]} ${y}`;
+  const host = document.getElementById("weeks");
+  host.innerHTML = "";
+  const todayKey = key(new Date());
+
+  for(const week of weeksOf(y,m)){
+    const { segs, lanes } = packWeek(week);
+    const wEl = document.createElement("div");
+    wEl.className = "week";
+
+    const dates = document.createElement("div");
+    dates.className = "datesrow";
+    for(const d of week){
+      const cell = document.createElement("div");
+      cell.className = "daycell"
+        + (d.getMonth() !== m ? " dim" : "")
+        + ([0,6].includes(d.getDay()) ? " weekend" : "")
+        + (key(d) === todayKey ? " today" : "");
+      cell.innerHTML = `<span class="num">${d.getDate()}</span><span class="plus">+</span>`;
+      cell.title = "Add an event on this day";
+      cell.onclick = () => openEditor(null, key(d));
+      dates.appendChild(cell);
+    }
+    wEl.appendChild(dates);
+
+    const bars = document.createElement("div");
+    bars.className = "bars";
+    bars.style.gridTemplateRows = `repeat(${lanes}, var(--bar-h))`;
+    for(const sg of segs){
+      const c = CATS[sg.ev.cat];
+      const b = document.createElement("button");
+      b.className = "bar" + (sg.ev.tentative ? " tentative" : "") + (sg.prev ? " contPrev" : "") + (sg.next ? " contNext" : "");
+      b.style.setProperty("--lane", sg.lane);
+      b.style.setProperty("--col", sg.col+1);
+      b.style.setProperty("--span", sg.span);
+      b.style.setProperty("--tone", c.tone);
+      b.innerHTML = `<span class="tag">${c.label}</span><span class="label">${esc(sg.ev.title)}</span>`;
+      b.title = `${sg.ev.title}\n${pretty(sg.ev.start)}${sg.ev.end !== sg.ev.start ? " – "+pretty(sg.ev.end) : ""}${sg.ev.tentative ? " (tentative)" : ""}${sg.ev.note ? "\n"+sg.ev.note : ""}`;
+      b.onclick = e => { e.stopPropagation(); openEditor(sg.ev); };
+      bars.appendChild(b);
+    }
+    wEl.appendChild(bars);
+    host.appendChild(wEl);
+  }
+}
+
+function renderLog(){
+  const el = document.getElementById("log");
+  if(!events.length){
+    el.innerHTML = `<div class="logmonth"><h2>No events yet</h2><p class="hint">Add one, or paste a saved <code>events.json</code> from the Data panel.</p></div>`;
+    return;
+  }
+  const groups = {};
+  for(const ev of events){
+    const d = parse(ev.start);
+    const g = `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    (groups[g] = groups[g] || []).push(ev);
+  }
+  el.innerHTML = Object.entries(groups).map(([g, list]) => `
+    <div class="logmonth">
+      <h2>${g}</h2>
+      ${list.map(ev => {
+        const c = CATS[ev.cat];
+        const span = ev.end !== ev.start ? `${pretty(ev.start)} – ${pretty(ev.end)}` : pretty(ev.start);
+        return `<div class="logrow" data-start="${ev.start}" data-title="${esc(ev.title)}">
+          <span class="when">${span}</span>
+          <span class="what">
+            <span class="dot" style="background:${c.tone}"></span>
+            <strong>${esc(ev.title)}</strong>
+            <span class="pill">${c.label}</span>
+            ${ev.tentative ? `<span class="pill">Tentative</span>` : ``}
+            ${ev.note ? `<span class="note">${esc(ev.note)}</span>` : ``}
+          </span>
+        </div>`;
+      }).join("")}
+    </div>`).join("");
+  el.querySelectorAll(".logrow").forEach(r => r.onclick = () => {
+    const ev = events.find(e => e.start === r.dataset.start && e.title === r.dataset.title);
+    if(ev) openEditor(ev);
+  });
+}
+
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+
+function render(){
+  renderCalendar();
+  renderLog();
+  document.getElementById("fJson").value = JSON.stringify(events, null, 2);
+}
+
+/* ---------- editor ---------- */
+function openEditor(ev, dateKey){
+  editing = ev || null;
+  document.getElementById("edTitle").textContent = ev ? "Edit event" : "Add event";
+  document.getElementById("fTitle").value = ev ? ev.title : "";
+  document.getElementById("fStart").value = ev ? ev.start : (dateKey || key(new Date()));
+  document.getElementById("fEnd").value   = ev ? ev.end   : (dateKey || key(new Date()));
+  document.getElementById("fCat").value   = ev ? ev.cat   : "release";
+  document.getElementById("fTent").checked = ev ? ev.tentative : false;
+  document.getElementById("fNote").value  = ev ? ev.note : "";
+  document.getElementById("edDelete").style.display = ev ? "" : "none";
+  show("editor");
+  setTimeout(() => document.getElementById("fTitle").focus(), 180);
+}
+
+function save(){
+  const title = document.getElementById("fTitle").value.trim();
+  let start = document.getElementById("fStart").value;
+  let end = document.getElementById("fEnd").value || start;
+  if(!title){ toast("Add a label first"); document.getElementById("fTitle").focus(); return; }
+  if(!start){ toast("Pick a start date"); return; }
+  if(end < start) [start, end] = [end, start];
+  const next = { title, start, end,
+    cat: document.getElementById("fCat").value,
+    tentative: document.getElementById("fTent").checked,
+    note: document.getElementById("fNote").value.trim() };
+  if(editing) events[events.indexOf(editing)] = next; else events.push(next);
+  events = normalize(events);
+  view = parse(start);
+  render(); hide(); toast(editing ? "Event updated" : "Event added");
+}
+
+function remove(){
+  if(!editing) return;
+  events.splice(events.indexOf(editing), 1);
+  render(); hide(); toast("Event deleted");
+}
+
+/* ---------- panels ---------- */
+function show(id){
+  hide();
+  const p = document.getElementById(id);
+  p.classList.add("on"); p.setAttribute("aria-hidden","false");
+  document.getElementById("scrim").classList.add("on");
+}
+function hide(){
+  ["editor","dataPanel"].forEach(id => {
+    const p = document.getElementById(id);
+    p.classList.remove("on"); p.setAttribute("aria-hidden","true");
+  });
+  document.getElementById("scrim").classList.remove("on");
+  editing = null;
+}
+let toastT;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 2000);
+}
+
+function setView(mode){
+  const isCal = mode === "cal";
+  document.getElementById("cal").classList.toggle("off", !isCal);
+  document.getElementById("log").classList.toggle("on", !isCal);
+  document.getElementById("vCal").setAttribute("aria-pressed", isCal);
+  document.getElementById("vLog").setAttribute("aria-pressed", !isCal);
+}
+
+/* ---------- boot ---------- */
+document.getElementById("fCat").innerHTML =
+  Object.entries(CATS).map(([k,c]) => `<option value="${k}">${c.label}</option>`).join("");
+renderLegend();
+
+document.getElementById("prev").onclick = () => { view = new Date(view.getFullYear(), view.getMonth()-1, 1); render(); };
+document.getElementById("next").onclick = () => { view = new Date(view.getFullYear(), view.getMonth()+1, 1); render(); };
+document.getElementById("today").onclick = () => { view = new Date(); render(); };
+document.getElementById("vCal").onclick = () => setView("cal");
+document.getElementById("vLog").onclick = () => setView("log");
+document.getElementById("add").onclick = () => openEditor(null);
+document.getElementById("data").onclick = () => show("dataPanel");
+document.getElementById("edSave").onclick = save;
+document.getElementById("edDelete").onclick = remove;
+document.getElementById("edCancel").onclick = hide;
+document.getElementById("edClose").onclick = hide;
+document.getElementById("dClose").onclick = hide;
+document.getElementById("scrim").onclick = hide;
+document.addEventListener("keydown", e => {
+  if(e.key === "Escape") hide();
+  if(e.key === "ArrowLeft" && !e.target.closest("input,textarea,select")) document.getElementById("prev").click();
+  if(e.key === "ArrowRight" && !e.target.closest("input,textarea,select")) document.getElementById("next").click();
+});
+
+document.getElementById("dCopy").onclick = async () => {
+  const txt = document.getElementById("fJson").value;
+  try { await navigator.clipboard.writeText(txt); toast("Copied — commit it as events.json"); }
+  catch { document.getElementById("fJson").select(); toast("Press Ctrl+C to copy"); }
+};
+document.getElementById("dDownload").onclick = () => {
+  const blob = new Blob([document.getElementById("fJson").value], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "events.json"; a.click();
+  URL.revokeObjectURL(a.href); toast("Downloaded events.json");
+};
+document.getElementById("dLoad").onclick = () => {
+  try {
+    const parsed = JSON.parse(document.getElementById("fJson").value);
+    if(!Array.isArray(parsed)) throw new Error("Top level must be a list of events");
+    events = normalize(parsed); render(); hide(); toast(`Loaded ${events.length} events`);
+  } catch(err){ toast("That isn't valid JSON: " + err.message); }
+};
+
+// Prefer events.json next to the page; fall back to the seed block below it.
+(async () => {
+  try {
+    const res = await fetch("events.json", {cache:"no-store"});
+    if(!res.ok) throw 0;
+    events = normalize(await res.json());
+  } catch {
+    events = normalize(JSON.parse(document.getElementById("seed").textContent));
+  }
+  render();
+})();
+
+// If the sync Action has run, show when it last pulled from Outlook —
+// purely informational, never blocks rendering if the file is missing.
+(async () => {
+  try {
+    const res = await fetch("last-sync.json", {cache:"no-store"});
+    if(!res.ok) throw 0;
+    const { synced_at } = await res.json();
+    const d = new Date(synced_at);
+    const stamp = d.toLocaleString(undefined, { month:"short", day:"numeric", hour:"numeric", minute:"2-digit" });
+    document.getElementById("syncedAt").textContent = `Synced from Outlook · ${stamp}`;
+  } catch { /* no sync file yet — fine, just don't show a timestamp */ }
+})();
+</script>
+</body>
+</html>

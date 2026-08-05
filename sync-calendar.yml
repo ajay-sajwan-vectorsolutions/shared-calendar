@@ -1,0 +1,42 @@
+name: Sync release calendar from Outlook
+
+on:
+  schedule:
+    # Runs at the top of every hour. GitHub may delay this a few minutes
+    # under load — that's a GitHub scheduling quirk, unrelated to the
+    # Outlook publish-cycle lag discussed elsewhere.
+    - cron: "0 * * * *"
+  workflow_dispatch: {}   # lets you click "Run workflow" in the Actions tab on demand
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: npm install --no-save node-ical
+
+      - name: Fetch ICS and rebuild events.json
+        env:
+          ICS_URL: ${{ secrets.ICS_URL }}
+        run: node scripts/sync-ics.js
+
+      - name: Commit changes if any
+        run: |
+          git config user.name "calendar-sync-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add events.json last-sync.json
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+          else
+            git commit -m "Sync calendar from Outlook ($(date -u +'%Y-%m-%d %H:%M UTC'))"
+            git push
+          fi

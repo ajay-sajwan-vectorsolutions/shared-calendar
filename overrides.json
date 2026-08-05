@@ -1,0 +1,20 @@
+{
+  "_readme": "Keys are '<slugified-title>@<start-date>', built from the event exactly as it comes out of Outlook. Run the sync once (or check a recent Action log) to see the exact ids it generated for your real events, then copy them in here. Anything left out just defaults to cat:'release', tentative:false.",
+
+  "web-release-pd-tracking@2026-08-12": {
+    "cat": "release",
+    "tentative": false,
+    "note": "Confirmed"
+  },
+  "mobile-release@2026-08-19": {
+    "cat": "mobile",
+    "tentative": true
+  },
+  "monthly-patching@2026-08-11": {
+    "cat": "patch",
+    "note": "Payara + OS patches, 10pm ET window"
+  },
+  "code-freeze@2026-08-10": {
+    "cat": "freeze"
+  }
+}

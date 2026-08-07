@@ -35,6 +35,12 @@ const OVERRIDES_PATH = path.join(ROOT, "overrides.json");
 const OUT_EVENTS = path.join(ROOT, "events.json");
 const OUT_SYNC = path.join(ROOT, "last-sync.json");
 
+// Emergency kill switch: set the repo variable/secret DISABLE_HTML_NOTES to
+// "true" to stop calling Outlook's undocumented API entirely — e.g. if
+// Microsoft ever changes or blocks it — without touching code. Plain-text
+// notes (below) are unaffected either way.
+const HTML_NOTES_ENABLED = process.env.DISABLE_HTML_NOTES !== "true";
+
 const VALID_CATS = new Set(["release", "patch", "mobile", "devcomplete", "freeze", "note"]);
 
 function pad(n) { return String(n).padStart(2, "0"); }
@@ -121,6 +127,231 @@ function icsNote(item) {
   return "";
 }
 
+/* ---------- optional: real HTML note bodies via Outlook's OWA API ----------
+ * The ICS feed carries no HTML at all (verified directly against the raw
+ * feed — no X-ALT-DESC, DESCRIPTION is plain text only). The only place the
+ * real, Outlook-formatted body (tables, etc.) exists is Outlook's own
+ * "published calendar" web view, which loads it from an undocumented,
+ * unsupported internal JSON API (GetAnonymousCalendarSessionData ->
+ * FindItem -> GetItem). Confirmed empirically (plain Node fetch, no
+ * browser/cookies) that this works and returns byte-identical bodies across
+ * independent sessions.
+ *
+ * This entire block is best-effort enrichment on top of the plain-text
+ * `note` computed above, which is always present regardless. Every step
+ * fails soft: a bad response, a network error, or an unmatched event just
+ * means that event (or every event, if the session/search step itself
+ * fails) keeps its plain-text note instead of gaining a rich one — never a
+ * crash, never a missing note.
+ */
+
+// EWS wants a legacy Windows timezone name, not the IANA one CALENDAR_TZ
+// uses. Only the common zones an ops person might realistically set
+// CALENDAR_TZ to are listed — an unlisted zone still works, it just falls
+// back to "Eastern Standard Time" for the OWA query only (today's default),
+// which at worst costs a few missed matches, never a wrong note.
+const IANA_TO_EWS_TZ = {
+  "America/New_York": "Eastern Standard Time",
+  "America/Chicago": "Central Standard Time",
+  "America/Denver": "Mountain Standard Time",
+  "America/Los_Angeles": "Pacific Standard Time",
+  "UTC": "UTC"
+};
+
+const OWA_REQUEST_TIMEOUT_MS = 15000;
+const OWA_USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+// Derives the OWA published-calendar API base from ICS_URL at runtime.
+// ICS_URL is a secret (it grants read access to the whole calendar) — it
+// must never be hardcoded or logged. The .ics link and the service.svc API
+// link share the same {calendarId}/{publishId} path segment and differ only
+// in folder name and filename, so the transform is a straight regex swap.
+// Returns null (meaning "HTML notes unavailable this run") if ICS_URL
+// doesn't look like the expected published-calendar shape.
+function deriveOwaServiceBase(icsUrl) {
+  try {
+    const u = new URL(icsUrl);
+    const m = u.pathname.match(/^\/owa\/calendar\/([^/]+)\/([^/]+)\/calendar\.ics$/i);
+    if (!m) return null;
+    u.pathname = `/owa/published/${m[1]}/${m[2]}/service.svc`;
+    u.search = "";
+    u.hash = "";
+    return u.toString();
+  } catch {
+    return null;
+  }
+}
+
+function owaHeaders(action, sessionId, bodyObj) {
+  return {
+    "content-type": "application/json; charset=utf-8",
+    action,
+    "x-req-source": "PublishedCalendar",
+    "x-owa-actionsource": action,
+    "x-owa-canary": "X-OWA-CANARY_cookie_is_null_or_empty",
+    "x-owa-sessionid": sessionId,
+    "x-owa-hosted-ux": "false",
+    "prefer": 'exchange.behavior="IncludeThirdPartyOnlineMeetingProviders"',
+    "user-agent": OWA_USER_AGENT,
+    // The actual request payload travels in this header, url-encoded JSON —
+    // not the POST body, which OWA leaves empty. Verified directly; this
+    // isn't a documented convention.
+    "x-owa-urlpostdata": encodeURIComponent(JSON.stringify(bodyObj))
+  };
+}
+
+async function owaCall(base, action, n, bodyObj, sessionId) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), OWA_REQUEST_TIMEOUT_MS);
+  try {
+    const res = await fetch(`${base}?action=${action}&app=PublishedCalendar&n=${n}`, {
+      method: "POST",
+      headers: owaHeaders(action, sessionId, bodyObj),
+      signal: controller.signal
+    });
+    if (!res.ok) throw new Error(`${action} responded HTTP ${res.status}`);
+    return await res.json();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+function ewsHeader(tzId) {
+  return {
+    __type: "JsonRequestHeaders:#Exchange",
+    RequestServerVersion: "V2018_01_08",
+    TimeZoneContext: {
+      __type: "TimeZoneContext:#Exchange",
+      TimeZoneDefinition: { __type: "TimeZoneDefinitionType:#Exchange", Id: tzId }
+    }
+  };
+}
+
+// EWS's Paging.StartDate/EndDate want a bare "YYYY-MM-DDTHH:mm:ss.mmm" (no
+// Z, no offset) — it's interpreted in whatever TimeZoneContext.Id says.
+// The events passed in only ever need day-level precision here, and the
+// range gets padded by a day on each side, so treating the UTC clock value
+// as if it were local wall-clock time (which is all this does) is close
+// enough for a search window — never used for anything more precise.
+function toEwsDateTime(d) {
+  const p2 = n => String(n).padStart(2, "0");
+  return `${d.getUTCFullYear()}-${p2(d.getUTCMonth() + 1)}-${p2(d.getUTCDate())}` +
+    `T${p2(d.getUTCHours())}:${p2(d.getUTCMinutes())}:${p2(d.getUTCSeconds())}.000`;
+}
+
+// Best-effort enrichment: returns Map<slugId, htmlString> for every event
+// this could confidently match to a real Outlook item. Matching is by
+// title + local start date only, requiring EXACTLY one FindItem candidate —
+// zero or multiple candidates both mean "don't guess", leaving that event
+// on plain text. Start dates are compared as the literal "YYYY-MM-DD" slice
+// of the offset-bearing string OWA returns (e.g. "2026-08-07T21:00:00-04:00"
+// -> "2026-08-07") — never round-tripped through `new Date(...).toISOString()`,
+// which converts to UTC first and would silently roll an evening event onto
+// the next day.
+async function fetchHtmlNotes(icsUrl, events) {
+  const result = new Map();
+  if (!HTML_NOTES_ENABLED) {
+    console.log("HTML notes disabled (DISABLE_HTML_NOTES=true) — plain text only.");
+    return result;
+  }
+  if (events.length === 0) return result;
+
+  const base = deriveOwaServiceBase(icsUrl);
+  if (!base) {
+    console.warn("ICS_URL doesn't look like an OWA published-calendar link — skipping HTML notes, plain text only.");
+    return result;
+  }
+
+  const tzId = IANA_TO_EWS_TZ[CALENDAR_TZ];
+  if (!tzId) {
+    console.warn(`CALENDAR_TZ "${CALENDAR_TZ}" has no known EWS equivalent — HTML-note matching may miss more than usual (falls back to plain text for those).`);
+  }
+  const header = ewsHeader(tzId || "Eastern Standard Time");
+  const sessionId = `sc-${process.pid}-${Date.now()}`;
+
+  let folderId;
+  try {
+    const session = await owaCall(base, "GetAnonymousCalendarSessionData", 0,
+      { __type: "GetAnonymousCalendarSessionDataJsonRequest:#Exchange", Header: header },
+      sessionId);
+    folderId = session?.Body?.CalendarFolder?.FolderId?.Id;
+    if (!folderId) throw new Error("response had no Body.CalendarFolder.FolderId");
+  } catch (err) {
+    console.warn("OWA session bootstrap failed — skipping HTML notes, plain text only:", err.message);
+    return result;
+  }
+
+  const starts = events.map(e => new Date(e.start + "T00:00:00Z")).sort((a, b) => a - b);
+  const ends = events.map(e => new Date(e.end + "T00:00:00Z")).sort((a, b) => a - b);
+  const rangeStart = new Date(starts[0].getTime() - 86400000);
+  const rangeEnd = new Date(ends[ends.length - 1].getTime() + 2 * 86400000);
+
+  let items;
+  try {
+    const found = await owaCall(base, "FindItem", 1, {
+      __type: "FindItemJsonRequest:#Exchange",
+      Header: header,
+      Body: {
+        __type: "FindItemRequest:#Exchange",
+        ParentFolderIds: [{ __type: "FolderId:#Exchange", Id: folderId }],
+        ItemShape: { __type: "ItemResponseShape:#Exchange", BaseShape: "IdOnly" },
+        Traversal: "Shallow",
+        Paging: {
+          __type: "CalendarPageView:#Exchange",
+          StartDate: toEwsDateTime(rangeStart),
+          EndDate: toEwsDateTime(rangeEnd)
+        }
+      }
+    }, sessionId);
+    items = found?.Body?.ResponseMessages?.Items?.[0]?.RootFolder?.Items;
+    if (!Array.isArray(items)) throw new Error("response had no Body.ResponseMessages.Items[0].RootFolder.Items");
+  } catch (err) {
+    console.warn("OWA FindItem failed — skipping HTML notes, plain text only:", err.message);
+    return result;
+  }
+
+  const byKey = new Map();
+  for (const it of items) {
+    if (!it?.ItemId?.Id) continue;
+    const startDate = String(it.Start || "").slice(0, 10);
+    const k = `${it.Subject || ""}@@${startDate}`;
+    if (!byKey.has(k)) byKey.set(k, []);
+    byKey.get(k).push(it);
+  }
+
+  let matched = 0;
+  for (const ev of events) {
+    const candidates = byKey.get(`${ev.title}@@${ev.start}`) || [];
+    if (candidates.length !== 1) continue; // none, or ambiguous — don't guess
+    const itemId = candidates[0].ItemId.Id;
+
+    try {
+      const detail = await owaCall(base, "GetItem", 2, {
+        __type: "GetItemJsonRequest:#Exchange",
+        Header: header,
+        Body: {
+          __type: "GetItemRequest:#Exchange",
+          ItemIds: [{ __type: "ItemId:#Exchange", Id: itemId }],
+          ShapeName: "FullCalendarItem",
+          ItemShape: { __type: "ItemResponseShape:#Exchange", BaseShape: "IdOnly" }
+        }
+      }, sessionId);
+      const body = detail?.Body?.ResponseMessages?.Items?.[0]?.Items?.[0]?.Body;
+      const html = body?.BodyType === "HTML" ? String(body.Value || "").trim() : "";
+      if (html) {
+        result.set(slug(ev.title, ev.start), html);
+        matched++;
+      }
+    } catch (err) {
+      console.warn(`GetItem failed for "${ev.title}" (${ev.start}) — that event stays plain text:`, err.message);
+    }
+  }
+
+  console.log(`OWA HTML notes: matched ${matched} of ${events.length} event(s).`);
+  return result;
+}
+
 function loadOverrides() {
   if (!fs.existsSync(OVERRIDES_PATH)) return {};
   try {
@@ -171,6 +402,20 @@ async function main() {
   }
 
   events.sort((a, b) => a.start.localeCompare(b.start) || a.title.localeCompare(b.title));
+
+  // Best-effort: attach a real HTML body (ev.noteHtml) wherever we can
+  // confidently match one. This can never fail the sync — every event
+  // already has a plain-text `note` from the loop above regardless of
+  // whether this succeeds, fails, or is disabled.
+  try {
+    const htmlNotes = await fetchHtmlNotes(ICS_URL, events);
+    for (const ev of events) {
+      const html = htmlNotes.get(slug(ev.title, ev.start));
+      if (html) ev.noteHtml = html;
+    }
+  } catch (err) {
+    console.warn("HTML notes enrichment failed unexpectedly — continuing with plain text only:", err.message);
+  }
 
   // Only write + let the workflow commit if something actually changed,
   // so a no-op hourly run doesn't spam the history with empty commits.

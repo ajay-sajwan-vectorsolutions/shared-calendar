@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Release Calendar</title>
+<link rel="icon" href="assets/img/favicon.ico" sizes="32x32">
+<link rel="icon" type="image/png" href="assets/img/favicon.png" sizes="48x48">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -185,7 +187,22 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
    bottom:0) — which is exactly "max height up to the browser height, 22px
    clear at top and bottom" from the .body padding above. */
 .field.note-field{flex:1;min-height:0;margin-bottom:0;display:flex;flex-direction:column}
-.note-box{flex:1;min-height:0;overflow-y:auto;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;line-height:1.5}
+.note-box{flex:1;min-height:0;overflow:auto;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;line-height:1.5}
+/* .rich = a sanitized real Outlook body (tables, lists, links) rather than
+   the plain-text fallback above — it needs its own wrapping/font rules
+   (Outlook's own inline styles are stripped, so structure needs restating)
+   and, since a wide table can't usefully wrap, relies on the overflow:auto
+   already set above to scroll sideways within its own box instead of
+   pushing the drawer itself wider. */
+.note-box.rich{white-space:normal;font-family:var(--sans)}
+.note-box.rich table{border-collapse:collapse;margin:6px 0;font-size:12px}
+.note-box.rich td,.note-box.rich th{border:1px solid var(--rule);padding:4px 8px;text-align:left;vertical-align:top;white-space:nowrap}
+.note-box.rich th{background:var(--shade);font-weight:600}
+.note-box.rich p{margin:0 0 8px}
+.note-box.rich p:last-child{margin-bottom:0}
+.note-box.rich ul,.note-box.rich ol{margin:0 0 8px;padding-left:20px}
+.note-box.rich a{color:#0271CE;text-decoration:underline}
+.note-box.rich blockquote{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--rule);color:var(--ink-3)}
 /* Day agenda (opened from a "+N" pill, or any bar on a day that has one):
    a collapsed list of that day's events, each expandable in place to the
    exact same read-only fields a single event shows. Only one row open at
@@ -216,7 +233,7 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
 
 /* ---------- event tooltip ---------- */
 .evtip{
-  position:fixed;z-index:70;max-width:280px;
+  position:fixed;z-index:70;max-width:280px;max-height:220px;overflow:hidden;
   background:var(--ink);color:#fff;
   border-radius:8px;padding:9px 12px;
   font-family:var(--sans);font-size:12.5px;line-height:1.45;
@@ -228,7 +245,11 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
 .evtip.on{opacity:1;transform:translateY(0);visibility:visible}
 .evtip .tip-title{font-weight:600;margin-bottom:2px;word-break:break-word}
 .evtip .tip-meta{font-family:var(--mono);font-size:11px;color:#b9c2ca}
-.evtip .tip-note{margin-top:5px;color:#dde2e6;word-break:break-word}
+/* Capped to 4 lines (not just left to the box's own max-height/overflow)
+   so a long note is never seen half-cut mid-line — it clips at a line
+   boundary, and .tip-hint right below tells the user where the rest is. */
+.evtip .tip-note{margin-top:5px;color:#dde2e6;word-break:break-word;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.evtip .tip-hint{margin-top:6px;color:#7ec8ff;font-size:11px;font-weight:600}
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
 @media (max-width:820px){
@@ -354,7 +375,12 @@ function normalize(list){
     end: e.end || e.start,
     cat: CATS[e.cat] ? e.cat : "release",
     tentative: !!e.tentative,
-    note: e.note || ""
+    note: e.note || "",
+    // Optional: a real Outlook HTML body (tables, etc.), sanitized at
+    // render time right before insertion — see sanitizeNoteHtml(). `note`
+    // above is always present and is what renders whenever this is
+    // missing, fails to sanitize, or sanitizes down to nothing.
+    noteHtml: typeof e.noteHtml === "string" ? e.noteHtml : ""
   })).sort((a,b) => a.start.localeCompare(b.start) || days(parse(a.start),parse(a.end)) - days(parse(b.start),parse(b.end)));
 }
 
@@ -562,6 +588,92 @@ function render(){
   document.getElementById("fJson").value = JSON.stringify(events, null, 2);
 }
 
+/* ---------- note rendering: sanitized HTML, plain text fallback ---------- */
+// ev.noteHtml (when present) is a real Outlook body fetched server-side by
+// sync-ics.js — untrusted external content that has never been sanitized
+// before this point. This allowlist walker is the ONLY place in the app
+// that ever assigns it to .innerHTML, kept as close as possible to that
+// assignment on purpose. Unknown tags are unwrapped (children kept, the
+// tag itself dropped) rather than deleted outright, so stray formatting
+// wrappers Outlook emits don't silently eat real note text.
+const NOTE_ALLOWED_TAGS = new Set([
+  "a","b","strong","i","em","u","p","br","div","span","ul","ol","li",
+  "table","thead","tbody","tr","td","th","h1","h2","h3","h4","blockquote","font"
+]);
+const NOTE_ALLOWED_ATTRS = {
+  a: new Set(["href"]),
+  td: new Set(["rowspan","colspan"]),
+  th: new Set(["rowspan","colspan"]),
+  font: new Set(["color"])
+};
+
+function sanitizeNoteHtml(html){
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  // Walks a LIVE pointer (child / child.nextSibling), not a childNodes
+  // snapshot taken up front. Unwrapping a disallowed element splices its
+  // children into `node` in place of it — a snapshot array wouldn't
+  // contain those newly-promoted nodes, so they'd never get visited or
+  // have their own attributes checked. Outlook bodies nest exactly like
+  // this (VML/Word wrappers like <o:p>/<v:shape> around real content), so
+  // this isn't a hypothetical: unvisited promoted children is how a
+  // nested onerror/onclick would have survived sanitizing.
+  (function walk(node){
+    let child = node.firstChild;
+    while(child){
+      const next = child.nextSibling;
+      if(child.nodeType === Node.COMMENT_NODE){
+        child.remove();
+      } else if(child.nodeType !== Node.ELEMENT_NODE){
+        // keep text nodes as-is
+      } else {
+        const tag = child.tagName.toLowerCase();
+        if(tag === "script" || tag === "style"){
+          child.remove();
+        } else if(!NOTE_ALLOWED_TAGS.has(tag)){
+          const promoted = child.firstChild; // resume walking AT the promoted content, not past it
+          while(child.firstChild) node.insertBefore(child.firstChild, child);
+          node.removeChild(child);
+          child = promoted;
+          continue;
+        } else {
+          const allowed = NOTE_ALLOWED_ATTRS[tag];
+          [...child.attributes].forEach(attr => {
+            const name = attr.name.toLowerCase();
+            if(!allowed || !allowed.has(name)){ child.removeAttribute(attr.name); return; }
+            if(name === "href" && !/^(https?:|mailto:)/i.test(attr.value.trim())){
+              child.removeAttribute(attr.name);
+            }
+            if((name === "rowspan" || name === "colspan") && !/^[1-9][0-9]?$/.test(attr.value.trim())){
+              child.removeAttribute(attr.name);
+            }
+          });
+          if(tag === "a"){ child.setAttribute("target","_blank"); child.setAttribute("rel","noopener noreferrer"); }
+          walk(child);
+        }
+      }
+      child = next;
+    }
+  })(doc.body);
+  return doc.body.innerHTML;
+}
+
+// Renders the note field's inner <div>: sanitized HTML when available and
+// non-empty after sanitizing, otherwise the plain-text note. Any failure
+// anywhere in that path (a malformed body, a DOMParser edge case, anything
+// unforeseen) is caught here and falls back to plain text too — a note
+// must always render something, never a blank or broken box.
+function noteBoxHTML(ev){
+  if(ev.noteHtml){
+    try {
+      const safe = sanitizeNoteHtml(ev.noteHtml);
+      if(safe.replace(/<[^>]*>/g," ").trim()) return `<div class="readval note-box rich">${safe}</div>`;
+    } catch(err){
+      console.warn("Note HTML render failed, falling back to plain text:", err);
+    }
+  }
+  return `<div class="readval note-box">${esc(ev.note || "—")}</div>`;
+}
+
 /* ---------- event details (read-only) ---------- */
 // Shared by the single-event view and each expanded row of the day agenda
 // below — same field set either way (Starts/Ends/Channel/Status/Note).
@@ -588,7 +700,7 @@ function eventFieldsHTML(ev){
     </div>
     <div class="field note-field">
       <label>Note</label>
-      <div class="readval note-box">${esc(ev.note || "—")}</div>
+      ${noteBoxHTML(ev)}
     </div>`;
 }
 
@@ -670,7 +782,8 @@ function showTip(anchorEl, ev, rangeText, point){
   tip.innerHTML =
     `<div class="tip-title">${esc(ev.title)}</div>` +
     `<div class="tip-meta">${esc(rangeText)}${ev.tentative ? " · Tentative" : ""}</div>` +
-    (ev.note ? `<div class="tip-note">${esc(ev.note)}</div>` : "");
+    (ev.note ? `<div class="tip-note">${esc(ev.note)}</div>` : "") +
+    `<div class="tip-hint">Click the event for full details</div>`;
 
   tip.style.left = "-9999px";
   tip.style.top = "-9999px";

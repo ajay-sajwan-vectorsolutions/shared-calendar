@@ -93,7 +93,7 @@
     "end": "2026-08-27",
     "cat": "release",
     "tentative": false,
-    "note": "1.\nAdmin Dashboard (Redesigned)\n  2.\nHome Page\n  3.\nUsers Page\n  4.\nPlans Page (Old page is discontinued, so it is out of scope)"
+    "note": "1. Admin Dashboard (Redesigned)\n2. Home Page\n3. Users Page\n4. Plans Page (Old page is discontinued, so it is out of scope)"
   },
   {
     "title": "Patching - US Server",

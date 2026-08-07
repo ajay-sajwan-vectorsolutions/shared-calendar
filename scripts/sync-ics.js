@@ -99,12 +99,22 @@ function icsTentative(item) {
   return typeof busy === "string" ? busy.toUpperCase() === "TENTATIVE" : undefined;
 }
 
+// Outlook's ICS export puts a numbered-list marker ("1.", "2.", …) on its
+// own line, with the item's actual text on the line after it — e.g.
+// "1.\nAdmin Dashboard (Redesigned)" instead of "1. Admin Dashboard
+// (Redesigned)". Verified directly against the raw feed: this is what
+// Outlook sends, not a rendering bug. Rejoin bare marker lines with
+// whatever follows so numbered lists in descriptions read normally.
+function joinListMarkers(text) {
+  return text.replace(/^[ \t]*(\d+\.)[ \t]*\r?\n[ \t]*/gm, "$1 ");
+}
+
 // Prefer the feed's own DESCRIPTION, then LOCATION, over anything hand-typed
 // in overrides.json. Outlook always emits DESCRIPTION (even if just "\n"),
 // so this trims whitespace-only values down to "" and treats that as "the
 // feed has nothing" rather than a real (empty) note.
 function icsNote(item) {
-  const description = String(item.description || "").trim();
+  const description = joinListMarkers(String(item.description || "").trim());
   if (description) return description;
   const location = String(item.location || "").trim();
   if (location) return location;

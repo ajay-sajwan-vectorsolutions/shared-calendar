@@ -1,78 +1,6 @@
 [
   {
-    "title": "test 2",
-    "start": "2026-08-07",
-    "end": "2026-08-07",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "test 3",
-    "start": "2026-08-07",
-    "end": "2026-08-07",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "test 4",
-    "start": "2026-08-07",
-    "end": "2026-08-07",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "test1",
-    "start": "2026-08-07",
-    "end": "2026-08-07",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "Evening event",
-    "start": "2026-08-12",
-    "end": "2026-08-12",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "long duration event",
-    "start": "2026-08-12",
-    "end": "2026-08-14",
-    "cat": "release",
-    "tentative": false,
-    "note": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum."
-  },
-  {
-    "title": "more events planned",
-    "start": "2026-08-12",
-    "end": "2026-08-12",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
     "title": "PD Tracking - GA",
-    "start": "2026-08-12",
-    "end": "2026-08-12",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "test another event",
-    "start": "2026-08-12",
-    "end": "2026-08-12",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "Testing more event",
     "start": "2026-08-12",
     "end": "2026-08-12",
     "cat": "release",
@@ -118,46 +46,6 @@
     "cat": "release",
     "tentative": false,
     "note": "Check Another Release"
-  },
-  {
-    "title": "event 1",
-    "start": "2026-08-26",
-    "end": "2026-08-26",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "event 2",
-    "start": "2026-08-26",
-    "end": "2026-08-26",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "event 3",
-    "start": "2026-08-26",
-    "end": "2026-08-26",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "event 4",
-    "start": "2026-08-26",
-    "end": "2026-08-26",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
-  },
-  {
-    "title": "event 5",
-    "start": "2026-08-26",
-    "end": "2026-08-26",
-    "cat": "release",
-    "tentative": false,
-    "note": ""
   },
   {
     "title": "Performance Release - Eval+",

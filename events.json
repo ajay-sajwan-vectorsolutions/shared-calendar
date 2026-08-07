@@ -1,5 +1,13 @@
 [
   {
+    "title": "adding new event for friday",
+    "start": "2026-08-07",
+    "end": "2026-08-07",
+    "cat": "release",
+    "tentative": false,
+    "note": "Checking the night event"
+  },
+  {
     "title": "PD Tracking - GA",
     "start": "2026-08-12",
     "end": "2026-08-12",

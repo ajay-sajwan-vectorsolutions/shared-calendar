@@ -1,5 +1,13 @@
 [
   {
+    "title": "TeachPoint - Unix Patching - PROD - US",
+    "start": "2026-06-18",
+    "end": "2026-06-18",
+    "cat": "release",
+    "tentative": true,
+    "note": "Hi Team,\n\n\n\nThe following servers will be part of schedule patching and will be temporarily unavailable during updates and security patch installation.\n\n\n\nAWS Account Number\n\nHost Name\n\nInstance ID\n\nIp Address\n\n325923818481\n\ntp-staging-app\n\ni-009cb51c9439765e0\n\n10.104.36.143\n\nldap_proxy_1t\n\ni-07d8a5cc9733c40fc\n\n10.104.32.74\n\nldap_proxy_2t\n\ni-07ec4a21692c97996\n\n10.104.32.82\n\ntp103-prod-acmh-tp1-app-asg\n\ni-0eada9e1d48466d15\n\n10.104.36.112\n\ntp102-prod-acmh-tp1-app-asg\n\ni-05771530097dee4ae\n\n10.104.36.71\n\ntp101-prod-acmh-tp1-app-asg\n\ni-06b39fe867ce5bb72\n\n10.104.36.85\n\ntp100-prod-acmh-tp1-batch-asg\n\ni-0212193780d2e8c58\n\n10.104.36.11\n\ntp100b-prod-acmh-tp1-batch-asg\n\ni-0cb95c62c4cafc8af\n\n10.104.36.60\n\ntp104-prod-acmh-tp1-app-asg\n\ni-02694af726e755152\n\n10.104.36.132\n\n\n\n\n\nPlease plan accordingly and let us know if you have any questions or concerns.\n\n\n\n\n\n________________________________________________________________________________\n\nMicrosoft Teams meeting\n\nJoin: https://teams.microsoft.com/meet/29436933540656?p=auHin9fVN4d2HYCj7g\n\nMeeting ID: 294 369 335 406 56\n\nPasscode: oZ3Bn7ts\n\n________________________________\n\nNeed help?<https://aka.ms/JoinTeamsMeeting?omkt=en-US> | System reference<https://teams.microsoft.com/l/meetup-join/19%3ameeting_YjA4OWJkMGItZTc4Ni00YmZkLWI5MjEtNmQwZDBiZTRjZjhj%40thread.v2/0?context=%7b%22Tid%22%3a%22fd01ebd7-e586-4325-92d2-7ad43688e011%22%2c%22Oid%22%3a%229cab4e09-07b2-4ea5-8cc5-0d13a9152661%22%7d>\n\nFor organizers: Meeting options<https://teams.microsoft.com/meetingOptions/?organizerId=9cab4e09-07b2-4ea5-8cc5-0d13a9152661&tenantId=fd01ebd7-e586-4325-92d2-7ad43688e011&threadId=19_meeting_YjA4OWJkMGItZTc4Ni00YmZkLWI5MjEtNmQwZDBiZTRjZjhj@thread.v2&messageId=0&language=en-US>\n\n________________________________________________________________________________"
+  },
+  {
     "title": "adding new event for friday",
     "start": "2026-08-07",
     "end": "2026-08-07",

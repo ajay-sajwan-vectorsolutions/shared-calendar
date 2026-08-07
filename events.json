@@ -8,6 +8,22 @@
     "note": ""
   },
   {
+    "title": "test another event",
+    "start": "2026-08-12",
+    "end": "2026-08-12",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Testing more event",
+    "start": "2026-08-12",
+    "end": "2026-08-12",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
     "title": "Patching : Dev Servers",
     "start": "2026-08-13",
     "end": "2026-08-13",

@@ -1,0 +1,66 @@
+[
+  {
+    "title": "PD Tracking - GA",
+    "start": "2026-08-12",
+    "end": "2026-08-12",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Patching : Dev Servers",
+    "start": "2026-08-13",
+    "end": "2026-08-13",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Keystone - Dev Complete",
+    "start": "2026-08-17",
+    "end": "2026-08-17",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Mobile Release - Ev+",
+    "start": "2026-08-19",
+    "end": "2026-08-19",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Patching - Canada Servers",
+    "start": "2026-08-20",
+    "end": "2026-08-21",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Monthly Bug Release - Eval+",
+    "start": "2026-08-24",
+    "end": "2026-08-24",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Performance Release - Eval+",
+    "start": "2026-08-27",
+    "end": "2026-08-27",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Patching - US Server",
+    "start": "2026-08-31",
+    "end": "2026-08-31",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  }
+]

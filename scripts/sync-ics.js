@@ -6,10 +6,18 @@
  * Runs on a GitHub Actions runner, not in a browser, so CORS doesn't apply:
  * this is a plain server-to-server fetch.
  *
- * Category / tentative / note are NOT reliably present in a bare ICS feed,
- * so those are supplied by hand in overrides.json, keyed by a stable id
- * built from the event's title + start date. Anything not in overrides.json
- * falls back to sensible defaults so nothing is ever dropped.
+ * Source-of-truth policy: the ICS feed is always read first for every field
+ * that has a real ICS equivalent — title/dates (SUMMARY/DTSTART/DTEND),
+ * tentative (Outlook's X-MICROSOFT-CDO-BUSYSTATUS), and note (DESCRIPTION,
+ * then LOCATION). overrides.json (keyed by a stable id built from the
+ * event's title + start date) is consulted only as a FALLBACK, when the
+ * feed has nothing usable for that field — e.g. a non-Outlook ICS source
+ * with no busystatus, or an event with no description/location.
+ *
+ * Category is the one exception: verified empirically (checked the raw ICS
+ * text directly) that Outlook's published feed carries no category/color
+ * data at all — nothing to prefer over overrides.json there, so cat comes
+ * from overrides.json exclusively and defaults to "release" when absent.
  */
 // node-ical builds all-day (date-only) VEVENTs using the process's own
 // system timezone, not UTC — so pin it to UTC before node-ical is loaded.
@@ -27,7 +35,7 @@ const OVERRIDES_PATH = path.join(ROOT, "overrides.json");
 const OUT_EVENTS = path.join(ROOT, "events.json");
 const OUT_SYNC = path.join(ROOT, "last-sync.json");
 
-const VALID_CATS = new Set(["release", "patch", "mobile", "freeze", "note"]);
+const VALID_CATS = new Set(["release", "patch", "mobile", "devcomplete", "freeze", "note"]);
 
 function pad(n) { return String(n).padStart(2, "0"); }
 
@@ -71,6 +79,38 @@ function slug(title, start) {
   );
 }
 
+// node-ical strips a leading "X-" from custom properties it doesn't parse
+// natively, but otherwise passes the token through as-is — look it up
+// case-insensitively so this doesn't silently break if some other calendar
+// client (or a future Outlook version) capitalizes it differently.
+function rawProp(item, name) {
+  const target = name.toLowerCase();
+  const key = Object.keys(item).find(k => k.toLowerCase() === target);
+  return key ? item[key] : undefined;
+}
+
+// Outlook's own STATUS is always "CONFIRMED" regardless of Show-As — the
+// real tentative/busy/free/OOF signal lives in the Microsoft extension
+// property below. Returns undefined (not false!) when the feed doesn't
+// have it at all, so the caller knows to fall back to overrides.json
+// instead of wrongly treating "no data" as "confirmed".
+function icsTentative(item) {
+  const busy = rawProp(item, "MICROSOFT-CDO-BUSYSTATUS");
+  return typeof busy === "string" ? busy.toUpperCase() === "TENTATIVE" : undefined;
+}
+
+// Prefer the feed's own DESCRIPTION, then LOCATION, over anything hand-typed
+// in overrides.json. Outlook always emits DESCRIPTION (even if just "\n"),
+// so this trims whitespace-only values down to "" and treats that as "the
+// feed has nothing" rather than a real (empty) note.
+function icsNote(item) {
+  const description = String(item.description || "").trim();
+  if (description) return description;
+  const location = String(item.location || "").trim();
+  if (location) return location;
+  return "";
+}
+
 function loadOverrides() {
   if (!fs.existsSync(OVERRIDES_PATH)) return {};
   try {
@@ -99,13 +139,24 @@ async function main() {
     const id = slug(item.summary, start);
     const ov = overrides[id] || {};
 
+    // ICS first, overrides.json only fills in what the feed didn't have.
+    const feedTentative = icsTentative(item);
+    const tentative = typeof feedTentative === "boolean"
+      ? feedTentative
+      : (typeof ov.tentative === "boolean" ? ov.tentative : false);
+
+    const feedNote = icsNote(item);
+    const note = feedNote || (typeof ov.note === "string" ? ov.note : "");
+
     events.push({
       title: String(item.summary).trim(),
       start,
       end,
+      // No ICS equivalent exists for this (verified: Outlook's feed carries
+      // no category data at all) — overrides.json is the only source.
       cat: VALID_CATS.has(ov.cat) ? ov.cat : "release",
-      tentative: typeof ov.tentative === "boolean" ? ov.tentative : false,
-      note: typeof ov.note === "string" ? ov.note : (item.location || "")
+      tentative,
+      note
     });
   }
 

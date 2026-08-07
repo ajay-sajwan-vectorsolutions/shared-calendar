@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Release Calendar</title>
+<title>Release Calendar (Square cells)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Open+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --ink:#14181e;
@@ -58,10 +58,6 @@ body{
 .eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
 h1{margin:0;font-size:25px;font-weight:700;letter-spacing:-.02em}
 .period{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:2px}
-/* Higher specificity than .period on purpose — this is the month/year
-   label only ("August 2026"), not the "Synced from Outlook…" line right
-   below it, which shares the .period class but should stay as before. */
-#period{font-family:"Open Sans",sans-serif;font-size:24px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#0271CE}
 
 .controls{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 button,.btn{font-family:var(--sans);font-size:13px;font-weight:500;color:var(--ink);background:var(--panel);border:1px solid var(--rule);border-radius:7px;padding:7px 12px;cursor:pointer;transition:border-color .12s,background .12s}
@@ -84,14 +80,17 @@ button.danger:hover{background:#fdf5f5;border-color:var(--c-freeze)}
 .key.hatch .swatch{border:1px dashed var(--ink-3)}
 
 /* ---------- calendar ---------- */
-.dow{display:grid;grid-template-columns:repeat(7,1fr);background:#0271CE;border-radius:8px 8px 0 0}
-.dow span{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#fff;padding:9px 8px;text-align:left}
-.dow span+span{border-left:1px solid rgba(255,255,255,.2)}
+/* Stands out as a real header now — solid dark bar, matching the same
+   bold-ink accent already used for "Today" and the active view toggle,
+   instead of blending in as a muted label row. */
+.dow{display:grid;grid-template-columns:repeat(7,1fr);background:var(--ink);border-radius:8px 8px 0 0}
+.dow span{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;padding:12px 8px;text-align:left}
+.dow span+span{border-left:1px solid rgba(255,255,255,.16)}
 
 .week{border-bottom:1px solid var(--rule)}
 .week:last-child{border-bottom:2px solid var(--ink)}
 .datesrow{display:grid;grid-template-columns:repeat(7,1fr)}
-.daycell{position:relative;padding:7px 8px 3px;min-height:34px}
+.daycell{position:relative;padding:7px 8px 3px;min-height:120px}
 .daycell+.daycell{border-left:1px solid var(--rule-2)}
 .daycell.dim .num{color:#c3cad0}
 .daycell.weekend{background:#fafbfb}
@@ -136,17 +135,6 @@ button.danger:hover{background:#fdf5f5;border-color:var(--c-freeze)}
 .bar.contPrev{border-top-left-radius:0;border-bottom-left-radius:0;margin-left:0}
 .bar.contNext{border-top-right-radius:0;border-bottom-right-radius:0;margin-right:0}
 .bar .tag{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.72;flex:none}
-/* The "+N" pill that replaces a day's overflow bars — same footprint as a
-   real bar (so the grid math lines up) but deliberately neutral, since it
-   doesn't belong to one category. Opens that day's full agenda on click. */
-.morepill{
-  grid-row:var(--lane);grid-column:var(--col) / span 1;height:var(--bar-h);
-  display:flex;align-items:center;justify-content:center;margin:0 3px;
-  border-radius:5px;font-family:var(--mono);font-size:11px;font-weight:600;
-  color:var(--ink-2);background:var(--shade);border:1px solid var(--rule);
-  cursor:pointer;transition:background .12s;
-}
-.morepill:hover{background:var(--rule-2)}
 
 /* ---------- log view ---------- */
 .log{display:none;padding-top:6px}
@@ -186,30 +174,6 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
    clear at top and bottom" from the .body padding above. */
 .field.note-field{flex:1;min-height:0;margin-bottom:0;display:flex;flex-direction:column}
 .note-box{flex:1;min-height:0;overflow-y:auto;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;line-height:1.5}
-/* Day agenda (opened from a "+N" pill, or any bar on a day that has one):
-   a collapsed list of that day's events, each expandable in place to the
-   exact same read-only fields a single event shows. Only one row open at
-   a time. The list itself is what scrolls (.body stays overflow:hidden,
-   same internal-scrollbar-only rule as the single-event note box). */
-.agenda{flex:1;min-height:0;overflow-y:auto;margin:0 -22px;padding:0 22px}
-.accrow{border-bottom:1px solid var(--rule)}
-.accrow:last-child{border-bottom:none}
-.acchead{
-  display:flex;align-items:center;gap:9px;width:100%;
-  padding:12px 8px 12px 12px;margin:0;
-  border:0;border-left:4px solid var(--tone,var(--ink-3));border-radius:0;
-  background:none;cursor:pointer;text-align:left;font-family:var(--sans);
-}
-.acchead:hover,.accrow.open .acchead{background:var(--shade)}
-.acchead .tag{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);flex:none}
-.acchead .acctitle{font-size:13.5px;font-weight:600;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.accbody{display:none;padding:2px 12px 18px 16px}
-.accrow.open .accbody{display:block}
-/* Inside a list, the note can't flex-grow to fill the drawer the way it
-   does for a single event (.field.note-field's flex:1 needs a flex
-   container, and .accbody isn't one) — cap it and let it scroll on its
-   own instead, so one long note can't dominate the whole agenda list. */
-.accbody .note-box{max-height:200px;flex:none}
 .hint code{font-family:var(--mono);font-size:11.5px;background:var(--shade);border:1px solid var(--rule);border-radius:4px;padding:1px 4px}
 .spacer{flex:1}
 .toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,14px);background:var(--ink);color:#fff;font-size:13px;padding:10px 18px;border-radius:8px;opacity:0;pointer-events:none;transition:.18s;z-index:60}
@@ -235,7 +199,7 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
   .wrap{padding:16px 12px 56px}
   .bar{font-size:11px;padding:0 6px}
   .bar .tag{display:none}
-  .dow span{font-size:9px;padding:7px 5px}
+  .dow span{font-size:10px;padding:9px 5px}
   .logrow{grid-template-columns:1fr;gap:3px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -285,7 +249,30 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
     <h2 id="edTitle">Event</h2>
     <button class="icon" id="edClose" aria-label="Close">&times;</button>
   </header>
-  <div class="body" id="edBody"></div>
+  <div class="body">
+    <div class="field row2">
+      <div>
+        <label>Starts</label>
+        <div class="readval" id="fStart"></div>
+      </div>
+      <div>
+        <label>Ends</label>
+        <div class="readval" id="fEnd"></div>
+      </div>
+    </div>
+    <div class="field">
+      <label>Channel</label>
+      <div class="readval" id="fCat"></div>
+    </div>
+    <div class="field">
+      <label>Status</label>
+      <div class="readval" id="fTent"></div>
+    </div>
+    <div class="field note-field">
+      <label>Note</label>
+      <div class="readval note-box" id="fNote"></div>
+    </div>
+  </div>
 </aside>
 
 <!-- data panel -->
@@ -343,7 +330,6 @@ const key = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-$
 const days = (a,b) => Math.round((b - a) / 864e5);
 const addDays = (d,n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
 const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const pretty = s => { const d = parse(s); return `${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}`; };
 const prettyFull = s => { const d = parse(s); return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`; };
 
@@ -397,35 +383,6 @@ function packWeek(week){
   return { segs, lanes: Math.max(lanes.length, 1) };
 }
 
-// A day cell shows at most MAX_LANES bars. Beyond that, the week no longer
-// grows taller — the day's last visible row becomes a "+N" pill instead,
-// and the full day's events move into the side panel (see openDayAgenda).
-const MAX_LANES = 3;
-
-function capOverflow(segs){
-  const dayTotal = Array(7).fill(0);
-  for(const sg of segs){
-    for(let c = sg.col; c < sg.col + sg.span; c++) dayTotal[c]++;
-  }
-  // How many bars each day can actually show before its last row must
-  // become "+N" instead of a real bar.
-  const cap = dayTotal.map(t => t > MAX_LANES ? MAX_LANES - 1 : t);
-  // Hide a segment entirely (never cut a multi-day bar mid-span) if it
-  // doesn't fit within the cap for EVERY day it covers.
-  const visible = segs.filter(sg => {
-    for(let c = sg.col; c < sg.col + sg.span; c++){
-      if(sg.lane > cap[c]) return false;
-    }
-    return true;
-  });
-  const overflow = [];
-  for(let c = 0; c < 7; c++){
-    const n = dayTotal[c] - cap[c];
-    if(n > 0) overflow.push({ col:c, count:n });
-  }
-  return { visible, overflow };
-}
-
 /* ---------- render ---------- */
 function renderLegend(){
   const el = document.getElementById("legend");
@@ -459,13 +416,10 @@ function renderCalendar(){
     }
     wEl.appendChild(dates);
 
-    const { visible, overflow } = capOverflow(segs);
-    const overflowCols = new Set(overflow.map(o => o.col));
-
     const bars = document.createElement("div");
     bars.className = "bars";
-    bars.style.gridTemplateRows = `repeat(${Math.min(lanes, MAX_LANES)}, var(--bar-h))`;
-    for(const sg of visible){
+    bars.style.gridTemplateRows = `repeat(${lanes}, var(--bar-h))`;
+    for(const sg of segs){
       const c = CATS[sg.ev.cat];
       const b = document.createElement("button");
       b.className = "bar" + (sg.ev.tentative ? " tentative" : "") + (sg.prev ? " contPrev" : "") + (sg.next ? " contNext" : "");
@@ -484,29 +438,8 @@ function renderCalendar(){
       b.addEventListener("mouseleave", hideTip);
       b.addEventListener("focus", () => showTip(b, sg.ev, range));
       b.addEventListener("blur", hideTip);
-      // If this bar's day also has a "+N" pill, open the full day agenda
-      // instead of just this one event — otherwise there'd be no way to
-      // reach the hidden events from a bar that happens to still be visible.
-      let onOverflowDay = false;
-      for(let c2 = sg.col; c2 < sg.col + sg.span; c2++) if(overflowCols.has(c2)) onOverflowDay = true;
-      const dayKey = key(week[sg.col]);
-      b.onclick = e => {
-        e.stopPropagation(); hideTip();
-        if(onOverflowDay) openDayAgenda(dayKey); else openEditor(sg.ev);
-      };
+      b.onclick = e => { e.stopPropagation(); hideTip(); openEditor(sg.ev); };
       bars.appendChild(b);
-    }
-    for(const o of overflow){
-      const day = week[o.col];
-      const p = document.createElement("button");
-      p.className = "morepill";
-      p.style.setProperty("--lane", MAX_LANES);
-      p.style.setProperty("--col", o.col+1);
-      p.textContent = `+${o.count}`;
-      p.setAttribute("aria-label", `${o.count} more event${o.count>1?"s":""} on ${MONTHS[day.getMonth()]} ${day.getDate()}`);
-      const dayKey = key(day);
-      p.onclick = e => { e.stopPropagation(); hideTip(); openDayAgenda(dayKey); };
-      bars.appendChild(p);
     }
     wEl.appendChild(bars);
     host.appendChild(wEl);
@@ -515,25 +448,20 @@ function renderCalendar(){
 
 function renderLog(){
   const el = document.getElementById("log");
-  // Scoped to whichever month the Calendar tab is currently navigated to
-  // (the same `view` state prev/next/today drive) — not every event ever
-  // synced. Re-rendered by render() on every prev/next/today click, so it
-  // stays in sync even if the user is looking at the Calendar tab when
-  // they navigate and only switches to Log afterward.
-  const y = view.getFullYear(), m = view.getMonth();
-  const monthEvents = events.filter(ev => {
-    const d = parse(ev.start);
-    return d.getFullYear() === y && d.getMonth() === m;
-  });
-  if(!monthEvents.length){
-    el.innerHTML = `<div class="logmonth"><h2>No events</h2><p class="hint">Nothing synced for ${MONTHS[m]} ${y}.</p></div>`;
+  if(!events.length){
+    el.innerHTML = `<div class="logmonth"><h2>No events yet</h2><p class="hint">Add one, or paste a saved <code>events.json</code> from the Data panel.</p></div>`;
     return;
   }
-  const g = `${MONTHS[m]} ${y}`;
-  el.innerHTML = `
+  const groups = {};
+  for(const ev of events){
+    const d = parse(ev.start);
+    const g = `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    (groups[g] = groups[g] || []).push(ev);
+  }
+  el.innerHTML = Object.entries(groups).map(([g, list]) => `
     <div class="logmonth">
       <h2>${g}</h2>
-      ${monthEvents.map(ev => {
+      ${list.map(ev => {
         const c = CATS[ev.cat];
         const span = ev.end !== ev.start ? `${pretty(ev.start)} – ${pretty(ev.end)}` : pretty(ev.start);
         return `<div class="logrow" data-start="${ev.start}" data-title="${esc(ev.title)}">
@@ -547,7 +475,7 @@ function renderLog(){
           </span>
         </div>`;
       }).join("")}
-    </div>`;
+    </div>`).join("");
   el.querySelectorAll(".logrow").forEach(r => r.onclick = () => {
     const ev = events.find(e => e.start === r.dataset.start && e.title === r.dataset.title);
     if(ev) openEditor(ev);
@@ -563,66 +491,14 @@ function render(){
 }
 
 /* ---------- event details (read-only) ---------- */
-// Shared by the single-event view and each expanded row of the day agenda
-// below — same field set either way (Starts/Ends/Channel/Status/Note).
-function eventFieldsHTML(ev){
-  const c = CATS[ev.cat];
-  return `
-    <div class="field row2">
-      <div>
-        <label>Starts</label>
-        <div class="readval">${prettyFull(ev.start)}</div>
-      </div>
-      <div>
-        <label>Ends</label>
-        <div class="readval">${prettyFull(ev.end)}</div>
-      </div>
-    </div>
-    <div class="field">
-      <label>Channel</label>
-      <div class="readval">${esc(c ? c.label : ev.cat)}</div>
-    </div>
-    <div class="field">
-      <label>Status</label>
-      <div class="readval">${ev.tentative ? "Tentative" : "Confirmed"}</div>
-    </div>
-    <div class="field note-field">
-      <label>Note</label>
-      <div class="readval note-box">${esc(ev.note || "—")}</div>
-    </div>`;
-}
-
 function openEditor(ev){
+  const c = CATS[ev.cat];
   document.getElementById("edTitle").textContent = ev.title;
-  document.getElementById("edBody").innerHTML = eventFieldsHTML(ev);
-  show("editor");
-}
-
-// A day with more events than fit in the calendar cell (see capOverflow)
-// opens here instead — every event for that date, collapsed to a colored
-// header row, expanding in place to the same fields openEditor shows.
-function openDayAgenda(dateKey){
-  const d = parse(dateKey);
-  const dayEvents = events.filter(ev => dateKey >= ev.start && dateKey <= ev.end);
-  document.getElementById("edTitle").textContent = `${DOW[d.getDay()]}, ${MONTHS[d.getMonth()].slice(0,3)} ${d.getDate()}`;
-  const body = document.getElementById("edBody");
-  body.innerHTML = `<div class="agenda">${dayEvents.map(ev => {
-    const c = CATS[ev.cat];
-    return `<div class="accrow">
-      <button class="acchead" style="--tone:${c ? c.tone : "var(--c-note)"}">
-        <span class="tag">${esc(c ? c.label : ev.cat)}</span>
-        <span class="acctitle">${esc(ev.title)}</span>
-      </button>
-      <div class="accbody">${eventFieldsHTML(ev)}</div>
-    </div>`;
-  }).join("")}</div>`;
-  body.querySelectorAll(".accrow").forEach(row => {
-    row.querySelector(".acchead").onclick = () => {
-      const wasOpen = row.classList.contains("open");
-      body.querySelectorAll(".accrow.open").forEach(r => r.classList.remove("open"));
-      if(!wasOpen) row.classList.add("open");
-    };
-  });
+  document.getElementById("fStart").textContent = prettyFull(ev.start);
+  document.getElementById("fEnd").textContent   = prettyFull(ev.end);
+  document.getElementById("fCat").textContent   = c ? c.label : ev.cat;
+  document.getElementById("fTent").textContent  = ev.tentative ? "Tentative" : "Confirmed";
+  document.getElementById("fNote").textContent  = ev.note || "—";
   show("editor");
 }
 

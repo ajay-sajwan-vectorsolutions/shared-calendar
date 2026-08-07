@@ -28,26 +28,41 @@ every change to the feed shows up as a git commit.
   commits the result **only if something changed** — a no-op hour doesn't
   create an empty commit.
 
-## Setting categories, tentative, and notes
+## Source of truth: ICS first, overrides.json as fallback only
 
-A bare ICS feed doesn't reliably carry Outlook's category colors, so those
-are set by hand in `overrides.json`, keyed by an id built from the event's
-title and start date:
+For every field that has a real ICS equivalent, the feed wins — `overrides.json`
+(keyed by an id built from the event's title and start date) only fills in
+what the feed didn't have:
+
+- **title / dates** — always from the feed (`SUMMARY` / `DTSTART` / `DTEND`).
+  overrides.json has no way to override these.
+- **tentative** — from Outlook's own `X-MICROSOFT-CDO-BUSYSTATUS` ("Show As:
+  Tentative" in the Outlook UI), if the feed has it. Falls back to
+  `overrides.json`'s `tentative` flag only for a feed that doesn't carry
+  that field at all (e.g. a non-Outlook ICS source).
+- **note** — from the feed's `DESCRIPTION`, then `LOCATION`, if either is
+  non-empty. Falls back to `overrides.json`'s `note` only when the feed has
+  neither.
+- **cat (category/color)** — the one exception. Verified directly against
+  the raw ICS text: Outlook's published feed carries **no category data at
+  all**, so there's nothing to prefer over overrides.json here — `cat`
+  always comes from `overrides.json`, defaulting to `"release"` when the
+  event has no entry there.
 
 ```
-"web-release-pd-tracking@2026-08-12": {
-  "cat": "release",
+"keystone-dev-complete@2026-08-17": {
+  "cat": "devcomplete",
   "tentative": false,
   "note": "Confirmed"
 }
 ```
 
-Valid `cat` values: `release`, `patch`, `mobile`, `freeze`, `note`.
+Valid `cat` values: `release`, `patch`, `mobile`, `devcomplete`, `freeze`, `note`.
 
-Anything in the Outlook feed that has no matching entry here defaults to
-`release` / not tentative, and the Action's log will list exactly which
-ids are missing so you can copy them in. Run the workflow once (or check
-its log) after adding new event types in Outlook to get the exact id string.
+Anything in the Outlook feed with no matching entry in `overrides.json`
+defaults to `cat:"release"`, and the Action's log lists exactly which ids
+are missing so you can copy them in. Run the workflow once (or check its
+log) after adding new event types in Outlook to get the exact id string.
 
 ## Known limits
 

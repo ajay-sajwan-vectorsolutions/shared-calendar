@@ -1,5 +1,29 @@
 [
   {
+    "title": "Evening event",
+    "start": "2026-08-12",
+    "end": "2026-08-12",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "long duration event",
+    "start": "2026-08-12",
+    "end": "2026-08-14",
+    "cat": "release",
+    "tentative": false,
+    "note": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley, the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised thanks to these sheets and more recently with desktop publishing software like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum."
+  },
+  {
+    "title": "more events planned",
+    "start": "2026-08-12",
+    "end": "2026-08-12",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
     "title": "PD Tracking - GA",
     "start": "2026-08-12",
     "end": "2026-08-12",
@@ -27,7 +51,7 @@
     "title": "Patching : Dev Servers",
     "start": "2026-08-13",
     "end": "2026-08-13",
-    "cat": "release",
+    "cat": "patch",
     "tentative": false,
     "note": ""
   },
@@ -35,7 +59,7 @@
     "title": "Keystone - Dev Complete",
     "start": "2026-08-17",
     "end": "2026-08-17",
-    "cat": "release",
+    "cat": "devcomplete",
     "tentative": false,
     "note": ""
   },
@@ -43,7 +67,7 @@
     "title": "Mobile Release - Ev+",
     "start": "2026-08-19",
     "end": "2026-08-19",
-    "cat": "release",
+    "cat": "mobile",
     "tentative": false,
     "note": ""
   },
@@ -51,8 +75,8 @@
     "title": "Patching - Canada Servers",
     "start": "2026-08-20",
     "end": "2026-08-21",
-    "cat": "release",
-    "tentative": false,
+    "cat": "patch",
+    "tentative": true,
     "note": ""
   },
   {
@@ -61,7 +85,7 @@
     "end": "2026-08-24",
     "cat": "release",
     "tentative": false,
-    "note": ""
+    "note": "Check Another Release"
   },
   {
     "title": "Performance Release - Eval+",
@@ -69,13 +93,13 @@
     "end": "2026-08-27",
     "cat": "release",
     "tentative": false,
-    "note": ""
+    "note": "1.\nAdmin Dashboard (Redesigned)\n  2.\nHome Page\n  3.\nUsers Page\n  4.\nPlans Page (Old page is discontinued, so it is out of scope)"
   },
   {
     "title": "Patching - US Server",
     "start": "2026-08-31",
     "end": "2026-08-31",
-    "cat": "release",
+    "cat": "patch",
     "tentative": false,
     "note": ""
   }

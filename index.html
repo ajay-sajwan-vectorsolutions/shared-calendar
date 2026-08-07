@@ -43,7 +43,7 @@
   --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
 }
 *{box-sizing:border-box}
-html,body{margin:0}
+html,body{margin:0;height:100%}
 body{
   background:var(--paper);
   color:var(--ink);
@@ -52,10 +52,15 @@ body{
   line-height:1.45;
   -webkit-font-smoothing:antialiased;
 }
-.wrap{max-width:1400px;margin:0 auto;padding:22px 20px 64px}
+/* min-height (not height) on purpose: the calendar view below stretches
+   to fill exactly this much with no scrollbar in the normal case, but if
+   content ever genuinely can't fit even at minimum row sizes, the page
+   falls back to a normal page scroll instead of silently clipping days —
+   a safety net, not the common path. */
+.wrap{max-width:1400px;margin:0 auto;padding:22px 20px 32px;min-height:100vh;display:flex;flex-direction:column}
 
 /* ---------- masthead ---------- */
-.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px solid var(--ink)}
+.masthead{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;padding-bottom:14px;border-bottom:2px solid var(--ink);flex:none}
 .brand{display:flex;flex-direction:column;gap:2px}
 .eyebrow{font-family:var(--mono);font-size:10.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
 h1{margin:0;font-size:25px;font-weight:700;letter-spacing:-.02em}
@@ -80,19 +85,41 @@ button.danger:hover{background:#fdf5f5;border-color:var(--c-freeze)}
 .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
 
 /* ---------- legend ---------- */
-.legend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--rule)}
+.legend{display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--rule);flex:none}
 .key{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--ink-2)}
 .swatch{width:22px;height:11px;border-radius:3px;flex:none}
 .key.hatch .swatch{border:1px dashed var(--ink-3)}
 
 /* ---------- calendar ---------- */
-.dow{display:grid;grid-template-columns:repeat(7,1fr);background:#0271CE;border-radius:8px 8px 0 0}
+/* .cal stretches to fill whatever's left below the masthead/legend
+   (flex:1 on a min-height:100vh ancestor — see .wrap), then #weeks and
+   each .week divide that up equally regardless of how many week rows the
+   current month has (4–6). Nothing here is display:none'd when Log view
+   is active — that's still .cal.off below — so this only ever applies
+   while the calendar itself is showing. */
+.cal{display:flex;flex-direction:column;flex:1;min-height:0}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);background:#0271CE;border-radius:8px 8px 0 0;flex:none}
 .dow span{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#fff;padding:12px 8px;text-align:left}
 .dow span+span{border-left:1px solid rgba(255,255,255,.2)}
+/* justify-content:center: once every .week below hits its max-height (see
+   .week), #weeks itself stops growing to fill .cal — on a large screen
+   that leaves real leftover space in .cal (below the dow header), and
+   centering the now fixed-height block of weeks in it looks intentional;
+   on a normal screen there's no leftover space to speak of, so this is a
+   no-op. */
+#weeks{display:flex;flex-direction:column;flex:1;min-height:0;justify-content:center}
 
-.week{border-bottom:1px solid var(--rule)}
+/* flex:1 makes each row absorb available height up to this cap — past it,
+   flex stops growing and the *number* of pixels a row can gain is capped
+   regardless of screen size. Without this, a very large/4K screen stretches
+   every row to fill 100% of it: rows over 100px tall driven by a still-tiny
+   26px bar, which just looks sparse rather than intentional (checked
+   directly at 2560x1440). 120px comfortably covers normal desktop heights
+   (this cap doesn't engage below it) while giving giant screens a sane
+   ceiling instead of unbounded growth. */
+.week{border-bottom:1px solid var(--rule);display:flex;flex-direction:column;flex:1;min-height:0;max-height:120px}
 .week:last-child{border-bottom:2px solid var(--ink)}
-.datesrow{display:grid;grid-template-columns:repeat(7,1fr)}
+.datesrow{display:grid;grid-template-columns:repeat(7,1fr);flex:none}
 .daycell{position:relative;padding:7px 8px 3px;min-height:34px}
 .daycell+.daycell{border-left:1px solid var(--rule-2)}
 .daycell.dim .num{color:#c3cad0}
@@ -100,7 +127,11 @@ button.danger:hover{background:#fdf5f5;border-color:var(--c-freeze)}
 .num{font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--ink-2)}
 .daycell.today .num{background:var(--ink);color:#fff;border-radius:5px;padding:1px 6px;margin-left:-4px}
 
-.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--bar-gap) 0;padding:1px 0 8px}
+/* flex:1 lets each week's row of bars absorb whatever extra height that
+   week was given; align-content:center keeps the (still fixed-height,
+   var(--bar-h)) bar rows centered in that space instead of all the slack
+   collecting at the bottom, so taller rows still look balanced. */
+.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--bar-gap) 0;padding:1px 0 8px;flex:1;min-height:0;align-content:center}
 .laneline{position:absolute;inset:0;pointer-events:none}
 .bar{
   grid-row:var(--lane);
@@ -159,9 +190,20 @@ button.danger:hover{background:#fdf5f5;border-color:var(--c-freeze)}
 .logrow{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:baseline;padding:9px 2px;border-bottom:1px solid var(--rule-2);cursor:pointer}
 .logrow:hover{background:var(--shade)}
 .logrow .when{font-family:var(--mono);font-size:11.5px;color:var(--ink-2)}
-.logrow .what{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+/* .what is now a column: .whatrow (dot/title/pills, unchanged) on top,
+   the note preview — plain text OR, now, a real sanitized Outlook table/
+   list — as its own full-width block below, rather than wrapped inline
+   next to the pills. A table can't sensibly share a flex-wrap line with
+   a title anyway, and giving the note a clean line of its own reads more
+   like the side panel's own separate "Note" field. */
+.logrow .what{display:flex;flex-direction:column;gap:4px}
+.logrow .whatrow{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
 .dot{width:8px;height:8px;border-radius:2px;flex:none;transform:translateY(-1px)}
-.logrow .note{color:var(--ink-3);font-size:12.5px}
+/* overflow-x:auto: unlike .note-box, a log row has no fixed width of its
+   own to size a scrollbar against — without this, a wide real Outlook
+   table would push the row (and the page) wider instead of scrolling
+   inside itself. No-op for plain text, which just wraps normally. */
+.logrow .note{color:var(--ink-3);font-size:12.5px;overflow-x:auto}
 .pill{font-family:var(--mono);font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--rule);border-radius:4px;padding:1px 5px;color:var(--ink-3)}
 
 /* ---------- drawer ---------- */
@@ -189,20 +231,24 @@ textarea{width:100%;resize:vertical;min-height:70px;font-family:var(--mono);font
 .field.note-field{flex:1;min-height:0;margin-bottom:0;display:flex;flex-direction:column}
 .note-box{flex:1;min-height:0;overflow:auto;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:12px;line-height:1.5}
 /* .rich = a sanitized real Outlook body (tables, lists, links) rather than
-   the plain-text fallback above — it needs its own wrapping/font rules
-   (Outlook's own inline styles are stripped, so structure needs restating)
-   and, since a wide table can't usefully wrap, relies on the overflow:auto
-   already set above to scroll sideways within its own box instead of
-   pushing the drawer itself wider. */
+   the plain-text fallback — Outlook's own inline styles are stripped by
+   the sanitizer, so structure needs restating. Bare .rich rules are
+   shared by anything that can show one (the side panel's .note-box, the
+   Log view's row preview, the day agenda) so a table looks the same
+   wherever it appears; .note-box.rich only carries the tweaks specific to
+   that one container (it defaults to mono/pre-wrap for plain text, which
+   rich content needs to override; a wide table relies on the overflow:auto
+   already set on .note-box to scroll sideways instead of pushing the
+   drawer wider — the Log view has no such fixed-width box to worry about). */
 .note-box.rich{white-space:normal;font-family:var(--sans)}
-.note-box.rich table{border-collapse:collapse;margin:6px 0;font-size:12px}
-.note-box.rich td,.note-box.rich th{border:1px solid var(--rule);padding:4px 8px;text-align:left;vertical-align:top;white-space:nowrap}
-.note-box.rich th{background:var(--shade);font-weight:600}
-.note-box.rich p{margin:0 0 8px}
-.note-box.rich p:last-child{margin-bottom:0}
-.note-box.rich ul,.note-box.rich ol{margin:0 0 8px;padding-left:20px}
-.note-box.rich a{color:#0271CE;text-decoration:underline}
-.note-box.rich blockquote{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--rule);color:var(--ink-3)}
+.rich table{border-collapse:collapse;margin:6px 0;font-size:12px}
+.rich td,.rich th{border:1px solid var(--rule);padding:4px 8px;text-align:left;vertical-align:top;white-space:nowrap}
+.rich th{background:var(--shade);font-weight:600}
+.rich p{margin:0 0 8px}
+.rich p:last-child{margin-bottom:0}
+.rich ul,.rich ol{margin:0 0 8px;padding-left:20px}
+.rich a{color:#0271CE;text-decoration:underline}
+.rich blockquote{margin:0 0 8px;padding-left:10px;border-left:3px solid var(--rule);color:var(--ink-3)}
 /* Day agenda (opened from a "+N" pill, or any bar on a day that has one):
    a collapsed list of that day's events, each expandable in place to the
    exact same read-only fields a single event shows. Only one row open at
@@ -564,13 +610,15 @@ function renderLog(){
         const span = ev.end !== ev.start ? `${pretty(ev.start)} – ${pretty(ev.end)}` : pretty(ev.start);
         return `<div class="logrow" data-start="${ev.start}" data-title="${esc(ev.title)}">
           <span class="when">${span}</span>
-          <span class="what">
-            <span class="dot" style="background:${c.tone}"></span>
-            <strong>${esc(ev.title)}</strong>
-            <span class="pill">${c.label}</span>
-            ${ev.tentative ? `<span class="pill">Tentative</span>` : ``}
-            ${ev.note ? `<span class="note">${esc(ev.note)}</span>` : ``}
-          </span>
+          <div class="what">
+            <span class="whatrow">
+              <span class="dot" style="background:${c.tone}"></span>
+              <strong>${esc(ev.title)}</strong>
+              <span class="pill">${c.label}</span>
+              ${ev.tentative ? `<span class="pill">Tentative</span>` : ``}
+            </span>
+            ${logNoteHTML(ev)}
+          </div>
         </div>`;
       }).join("")}
     </div>`;
@@ -657,21 +705,41 @@ function sanitizeNoteHtml(html){
   return doc.body.innerHTML;
 }
 
-// Renders the note field's inner <div>: sanitized HTML when available and
-// non-empty after sanitizing, otherwise the plain-text note. Any failure
-// anywhere in that path (a malformed body, a DOMParser edge case, anything
-// unforeseen) is caught here and falls back to plain text too — a note
-// must always render something, never a blank or broken box.
-function noteBoxHTML(ev){
+// Shared sanitize-then-fallback resolution, used by every place that
+// renders a note (the side panel, the day agenda, the log). Any failure
+// anywhere in this path (a malformed body, a DOMParser edge case, anything
+// unforeseen) falls back to "not rich" here, once, so every caller gets
+// the same plain-text safety net instead of re-implementing the catch.
+function resolveNoteHTML(ev){
   if(ev.noteHtml){
     try {
       const safe = sanitizeNoteHtml(ev.noteHtml);
-      if(safe.replace(/<[^>]*>/g," ").trim()) return `<div class="readval note-box rich">${safe}</div>`;
+      if(safe.replace(/<[^>]*>/g," ").trim()) return { html: safe, rich: true };
     } catch(err){
       console.warn("Note HTML render failed, falling back to plain text:", err);
     }
   }
+  return { html: null, rich: false };
+}
+
+// Renders the note field's inner <div>: sanitized HTML when available and
+// non-empty after sanitizing, otherwise the plain-text note. A note must
+// always render something, never a blank or broken box.
+function noteBoxHTML(ev){
+  const { html, rich } = resolveNoteHTML(ev);
+  if(rich) return `<div class="readval note-box rich">${html}</div>`;
   return `<div class="readval note-box">${esc(ev.note || "—")}</div>`;
+}
+
+// Same policy, for the Log view's per-row note preview — a bare div (not
+// .note-box: no fixed font/height there, it just sits under the row's
+// title line) so a real Outlook table renders as an actual table instead
+// of the old flattened, run-on plain text.
+function logNoteHTML(ev){
+  if(!ev.note && !ev.noteHtml) return "";
+  const { html, rich } = resolveNoteHTML(ev);
+  if(rich) return `<div class="note rich">${html}</div>`;
+  return ev.note ? `<div class="note">${esc(ev.note)}</div>` : "";
 }
 
 /* ---------- event details (read-only) ---------- */

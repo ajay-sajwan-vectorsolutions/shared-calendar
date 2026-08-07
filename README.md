@@ -64,6 +64,33 @@ defaults to `cat:"release"`, and the Action's log lists exactly which ids
 are missing so you can copy them in. Run the workflow once (or check its
 log) after adding new event types in Outlook to get the exact id string.
 
+## Rich (HTML) notes — best-effort, always with a plain-text fallback
+
+The ICS feed itself carries no HTML — `note` above is always plain text.
+Real Outlook formatting (tables, numbered lists, etc.) only exists in
+Outlook's own "published calendar" web view, which loads it from an
+undocumented, unsupported internal API. `scripts/sync-ics.js` calls that
+same API as a **best-effort enrichment on top of** the plain-text note, never
+instead of it:
+
+- Every event always gets its plain-text `note` first, exactly as before.
+- If (and only if) that event can be matched to Outlook's own copy with
+  high confidence (exact title + exact start date, and exactly one such
+  match — anything ambiguous is left alone), `events.json` also gets a
+  `noteHtml` field with the real formatted body.
+- `index.html` sanitizes `noteHtml` with an allowlist (tags: text formatting,
+  links, lists, tables; attributes: `href`, `rowspan`/`colspan`, link
+  `color`) immediately before display, and falls back to the plain-text
+  `note` if `noteHtml` is missing, fails to sanitize, or sanitizes down to
+  nothing. A note always renders something.
+
+**This is inherently more fragile than the ICS feed** — it's a private
+Microsoft API that could change or be blocked with no notice, unlike the
+published ICS link. If it ever breaks, the sync doesn't fail: every event
+just keeps its plain-text note, same as before this feature existed. To
+turn it off deliberately (e.g. while investigating an issue) without a code
+change, add a repository variable/secret `DISABLE_HTML_NOTES` set to `true`.
+
 ## Known limits
 
 - `events.json` and `last-sync.json` are generated files — don't hand-edit

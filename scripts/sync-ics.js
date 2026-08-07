@@ -99,10 +99,6 @@ async function main() {
     const id = slug(item.summary, start);
     const ov = overrides[id] || {};
 
-    // TEMP DIAGNOSTIC — checking what Outlook actually publishes for
-    // categories in the raw ICS feed. Remove after inspecting the log.
-    console.log("DIAG", id, "categories=", JSON.stringify(item.categories));
-
     events.push({
       title: String(item.summary).trim(),
       start,

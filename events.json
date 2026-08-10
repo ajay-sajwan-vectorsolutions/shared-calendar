@@ -32,8 +32,8 @@
     "end": "2026-08-12",
     "cat": "release",
     "tentative": false,
-    "note": "2026 Release — PD Tracking\n44 Epics · 160 User Stories\nJIRA - Release Page - https://lmsportal.atlassian.net/projects/TP/versions/39615/tab/release-report-all-issues\nPlaybook - https://lmsportal.atlassian.net/wiki/spaces/PE/pages/29263659009/Eval+PD+Tracking+Release+Deployment+Playbook+12+Aug+2026\n\nEpic and Story details",
-    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"text-align:left; text-indent:0px; margin:0px 0px 4px; font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>2026 Release — PD Tracking</b></div><div class=\"elementToProof\" style=\"text-align:left; text-indent:0px; margin:0px; font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">44 Epics · 160 User Stories</div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">JIRA - Release Page - <a href=\"https://lmsportal.atlassian.net/projects/TP/versions/39615/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\">https://lmsportal.atlassian.net/projects/TP/versions/39615/tab/release-report-all-issues</a></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">Playbook - <a href=\"https://lmsportal.atlassian.net/wiki/spaces/PE/pages/29263659009/Eval+PD+Tracking+Release+Deployment+Playbook+12+Aug+2026\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\">https://lmsportal.atlassian.net/wiki/spaces/PE/pages/29263659009/Eval+PD+Tracking+Release+Deployment+Playbook+12+Aug+2026</a></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>Epic and Story details</b></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div></body></html>"
+    "note": "2026 Release — PD Tracking\n\n44 Epics · 160 User Stories\n________________________________\n\nJIRA - Release Page - https://lmsportal.atlassian.net/projects/TP/versions/39615/tab/release-report-all-issues\n\nPlaybook - https://lmsportal.atlassian.net/wiki/spaces/PE/pages/29263659009/Eval+PD+Tracking+Release+Deployment+Playbook+12+Aug+2026",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"text-align:left; text-indent:0px; margin:0px 0px 4px; font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Release — PD Tracking</div><div style=\"text-align:left; text-indent:0px; margin:0px; font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div style=\"text-align:left; text-indent:0px; margin:0px; font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">44 Epics · 160 User Stories</div><hr style=\"border-width:3pt; border-style:double none none; border-color:currentcolor; display:inline-block; width:98%\"><div style=\"text-align:left; text-indent:0px; margin:0px; font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>JIRA </b>- Release Page - <a href=\"https://lmsportal.atlassian.net/projects/TP/versions/39615/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\" id=\"OWA4811eab5-f149-42ab-881e-6906eed740be\" class=\"x_x_OWAAutoLink\">https://lmsportal.atlassian.net/projects/TP/versions/39615/tab/release-report-all-issues</a></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>Playbook </b>- <a href=\"https://lmsportal.atlassian.net/wiki/spaces/PE/pages/29263659009/Eval+PD+Tracking+Release+Deployment+Playbook+12+Aug+2026\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\" id=\"OWA5abada38-7182-f119-920d-a5b662bb59ed\" class=\"x_x_OWAAutoLink\">https://lmsportal.atlassian.net/wiki/spaces/PE/pages/29263659009/Eval+PD+Tracking+Release+Deployment+Playbook+12+Aug+2026</a></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div></body></html>"
   },
   {
     "title": "Patching : Dev Servers",
@@ -41,7 +41,8 @@
     "end": "2026-08-13",
     "cat": "patch",
     "tentative": false,
-    "note": ""
+    "note": "2026 Patching Dev Servers - August",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching Dev Servers&nbsp;- August</div></body></html>"
   },
   {
     "title": "Keystone - Dev Complete",
@@ -57,7 +58,8 @@
     "end": "2026-08-19",
     "cat": "mobile",
     "tentative": false,
-    "note": ""
+    "note": "2026 Release — Eval+ Mobile Release\n\nJIRA Release Page - https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; color:rgb(0,0,0)\"><span style=\"font-size:20pt; color:rgb(12,100,192)\">2026 Release — Eval+ Mobile Release</span></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">JIRA Release Page - <a href=\"https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\">https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues</a></div></body></html>"
   },
   {
     "title": "Patching - Canada Servers",
@@ -65,7 +67,8 @@
     "end": "2026-08-21",
     "cat": "patch",
     "tentative": true,
-    "note": ""
+    "note": "2026 Patching Canada Servers - August",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching Canada Servers&nbsp;- August</div></body></html>"
   },
   {
     "title": "Monthly Bug Release - Eval+",
@@ -73,8 +76,8 @@
     "end": "2026-08-24",
     "cat": "release",
     "tentative": false,
-    "note": "Check Another Release",
-    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">Check Another Release</div></body></html>"
+    "note": "2026 Release - Eval+ Monthly Release\n\nJIRA Release Page - https://lmsportal.atlassian.net/projects/TP/versions/33296/tab/release-report-all-issues",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:18pt; color:rgb(12,100,192)\">2026 Release - Eval+ Monthly Release</div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:18pt; color:rgb(12,100,192)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">JIRA Release Page - <a href=\"https://lmsportal.atlassian.net/projects/TP/versions/33296/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\" id=\"OWA1705982f-eaed-9584-f899-60927d1fd4c6\" class=\"OWAAutoLink\">https://lmsportal.atlassian.net/projects/TP/versions/33296/tab/release-report-all-issues</a></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div></body></html>"
   },
   {
     "title": "Performance Release - Eval+",
@@ -82,8 +85,8 @@
     "end": "2026-08-27",
     "cat": "release",
     "tentative": false,
-    "note": "1. Admin Dashboard (Redesigned)\n2. Home Page\n3. Users Page\n4. Plans Page (Old page is discontinued, so it is out of scope)",
-    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><ol start=\"1\" data-editing-info=\"{&quot;applyListStyleFromLevel&quot;:false,&quot;orderedStyleType&quot;:1}\" style=\"margin-top:0px; margin-bottom:0px; list-style-type:decimal\"><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div class=\"elementToProof\" role=\"presentation\">Admin Dashboard (Redesigned)</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Home Page</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div class=\"elementToProof\" role=\"presentation\">Users Page</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div class=\"elementToProof\" role=\"presentation\">Plans Page (Old page is discontinued, so it is out of scope)</div></li></ol></body></html>"
+    "note": "2026 Release — Performance Release (August)\n\n\n1. Admin Dashboard (Redesigned)\n2. Home Page\n3. Users Page\n4. Plans Page (Old page is discontinued, so it is out of scope)",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; color:rgb(0,0,0)\"><span style=\"font-size:20pt; color:rgb(12,100,192)\">2026 Release — Performance Release (August)</span></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><ol start=\"1\" data-editing-info=\"{&quot;applyListStyleFromLevel&quot;:false,&quot;orderedStyleType&quot;:1}\" style=\"margin-top:0px; margin-bottom:0px; list-style-type:decimal\"><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Admin Dashboard (Redesigned)</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Home Page</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Users Page</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Plans Page (Old page is discontinued, so it is out of scope)</div></li></ol></body></html>"
   },
   {
     "title": "Patching - US Server",
@@ -91,6 +94,7 @@
     "end": "2026-08-31",
     "cat": "patch",
     "tentative": false,
-    "note": ""
+    "note": "2026 Patching US Servers - August",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching US Servers&nbsp;- August</div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\"><br></div></body></html>"
   }
 ]

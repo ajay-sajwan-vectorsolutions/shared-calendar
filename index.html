@@ -66,7 +66,7 @@ body{
 h1{margin:0;font-size:25px;font-weight:700;letter-spacing:-.02em}
 .period{font-family:var(--mono);font-size:12px;color:var(--ink-2);margin-top:2px}
 /* Higher specificity than .period on purpose — this is the month/year
-   label only ("August 2026"), not the "Synced from Outlook…" line right
+   label only ("August 2026"), not the "Last Synced…" line right
    below it, which shares the .period class but should stay as before. */
 #period{font-family:"Open Sans",sans-serif;font-size:24px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:#0271CE}
 
@@ -962,7 +962,7 @@ document.getElementById("dLoad").onclick = () => {
     const { synced_at } = await res.json();
     const d = new Date(synced_at);
     const stamp = d.toLocaleString(undefined, { month:"short", day:"numeric", hour:"numeric", minute:"2-digit" });
-    document.getElementById("syncedAt").textContent = `Synced from Outlook · ${stamp}`;
+    document.getElementById("syncedAt").textContent = `Last Synced · ${stamp}`;
   } catch { /* no sync file yet — fine, just don't show a timestamp */ }
 })();
 </script>

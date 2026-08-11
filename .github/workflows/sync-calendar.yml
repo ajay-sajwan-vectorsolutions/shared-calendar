@@ -2,10 +2,10 @@ name: Sync release calendar from Outlook
 
 on:
   schedule:
-    # Runs at the top of every hour. GitHub may delay this a few minutes
-    # under load — that's a GitHub scheduling quirk, unrelated to the
-    # Outlook publish-cycle lag discussed elsewhere.
-    - cron: "0 * * * *"
+    # Runs at the top of every 8th hour (00:00, 08:00, 16:00 UTC). GitHub may
+    # delay this a few minutes under load — that's a GitHub scheduling quirk,
+    # unrelated to the Outlook publish-cycle lag discussed elsewhere.
+    - cron: "0 */8 * * *"
   workflow_dispatch: {}   # lets you click "Run workflow" in the Actions tab on demand
 
 permissions:

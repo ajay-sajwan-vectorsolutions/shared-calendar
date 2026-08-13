@@ -73,9 +73,9 @@
   {
     "title": "Patching - Canada Servers",
     "start": "2026-08-20",
-    "end": "2026-08-21",
+    "end": "2026-08-20",
     "cat": "patch",
-    "tentative": true,
+    "tentative": false,
     "note": "2026 Patching Canada Servers - August",
     "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching Canada Servers&nbsp;- August</div></body></html>"
   },

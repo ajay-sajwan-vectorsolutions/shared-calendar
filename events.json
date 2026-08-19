@@ -78,7 +78,7 @@
     "cat": "patch",
     "tentative": false,
     "note": "2026 Patching Canada Servers - August",
-    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching Canada Servers&nbsp;- August</div></body></html>"
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching Canada Servers&nbsp;- August</div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div></body></html>"
   },
   {
     "title": "(Target) Monthly Bug Release - Eval+",

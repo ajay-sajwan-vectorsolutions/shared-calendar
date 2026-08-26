@@ -50,7 +50,8 @@
     "end": "2026-08-13",
     "cat": "patch",
     "tentative": false,
-    "note": "2026 Patching Dev Servers - August\n\nStatus:done"
+    "note": "2026 Patching Dev Servers - August\n\nStatus:done",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Patching Dev Servers&nbsp;- August</div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; color:rgb(12,100,192)\"><span style=\"font-size:12pt; color:rgb(0,0,0)\">Status:done</span></div></body></html>"
   },
   {
     "title": "Keystone - Dev Complete",
@@ -58,7 +59,8 @@
     "end": "2026-08-17",
     "cat": "devcomplete",
     "tentative": false,
-    "note": "Status:Done"
+    "note": "Status:Done",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">Status:Done</div></body></html>"
   },
   {
     "title": "(CONFIRMED) Mobile Release - Ev+",
@@ -66,7 +68,8 @@
     "end": "2026-08-19",
     "cat": "release",
     "tentative": false,
-    "note": "2026 Release — Eval+ Mobile Release\n\nJIRA - Release Page - https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues"
+    "note": "2026 Release — Eval+ Mobile Release\n\nJIRA - Release Page - https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues",
+    "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:20pt; color:rgb(12,100,192)\">2026 Release — Eval+ Mobile Release</div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>JIRA -&nbsp;</b>Release Page - <a href=\"https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\" id=\"OWA3f7dc19b-055f-d2ef-1f6e-f77ef2c42039\" class=\"OWAAutoLink\">https://lmsportal.atlassian.net/projects/TP/versions/30772/tab/release-report-all-issues</a></div></body></html>"
   },
   {
     "title": "Patching - Canada Servers",

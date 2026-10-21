@@ -286,5 +286,21 @@
     "tentative": false,
     "note": "Alexandria City Public Schools | Pending Multi-Session Event – Multi-Session Event Request Loses Sessions On Submit And Duplicates On Retry\n\nRelease Board\nhttps://lmsportal.atlassian.net/projects/TP/versions/33298/tab/release-report-all-issues\n\nDefect Ticket\nhttps://lmsportal.atlassian.net/browse/TP-32435",
     "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>Alexandria City Public Schools</b> | Pending Multi-Session Event – Multi-Session Event Request Loses Sessions On Submit And Duplicates On Retry<br></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>Release Board</b></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><a href=\"https://lmsportal.atlassian.net/projects/TP/versions/33298/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\">https://lmsportal.atlassian.net/projects/TP/versions/33298/tab/release-report-all-issues</a></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><div class=\"elementToProof\" style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><b>Defect Ticket</b></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><a href=\"https://lmsportal.atlassian.net/browse/TP-32435\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\" id=\"OWAd0e18d1a-dc85-3c67-4aee-fbc98e3cf2e7\" class=\"OWAAutoLink\">https://lmsportal.atlassian.net/browse/TP-32435</a></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div></body></html>"
+  },
+  {
+    "title": "PD Day JCPS",
+    "start": "2026-11-02",
+    "end": "2026-11-02",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "PD Day- Multiple Schools",
+    "start": "2026-11-03",
+    "end": "2026-11-03",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
   }
 ]

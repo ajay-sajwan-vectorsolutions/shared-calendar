@@ -347,5 +347,29 @@
     "tentative": false,
     "note": "Security Release\nhttps://lmsportal.atlassian.net/projects/TP/versions/40961/tab/release-report-all-issues\n\n\n1. Veracode Scan - results from sept\n2. Pentest - High (3)\n3. HTTP Headers ticket\n4. Other security fixes (Act Now)",
     "noteHtml": "<html><head>\r\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head><body><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\">Security Release</div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><a href=\"https://lmsportal.atlassian.net/projects/TP/versions/40961/tab/release-report-all-issues\" target=\"_blank\" rel=\"noopener noreferrer\" data-auth=\"NotApplicable\" id=\"OWAb7b6db8c-22d0-539a-9547-0f27a5199781\" class=\"OWAAutoLink\">https://lmsportal.atlassian.net/projects/TP/versions/40961/tab/release-report-all-issues</a></div><div style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0)\"><br></div><ol start=\"1\" data-editing-info=\"{&quot;applyListStyleFromLevel&quot;:false,&quot;orderedStyleType&quot;:1}\" style=\"margin-top:0px; margin-bottom:0px; list-style-type:decimal\"><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Veracode Scan - results from sept</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">Pentest - High (3)</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div role=\"presentation\">HTTP Headers ticket</div></li><li style=\"font-family:Aptos,Aptos_EmbeddedFont,Aptos_MSFontService,Calibri,Helvetica,sans-serif; font-size:12pt; color:rgb(0,0,0); margin-top:0px; margin-bottom:0px\"><div class=\"elementToProof\" role=\"presentation\">Other security fixes (Act Now)</div></li></ol></body></html>"
+  },
+  {
+    "title": "Bedford Public Schools PD Day",
+    "start": "2027-01-15",
+    "end": "2027-01-15",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Bangor Public Schools PD Day",
+    "start": "2027-02-19",
+    "end": "2027-02-19",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
+  },
+  {
+    "title": "Bangor Public Schools PD Day",
+    "start": "2027-03-19",
+    "end": "2027-03-19",
+    "cat": "release",
+    "tentative": false,
+    "note": ""
   }
 ]
